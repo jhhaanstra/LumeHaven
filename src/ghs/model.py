@@ -23,7 +23,7 @@ class GameState:
             f"elements={self.elements})"
         )
 
-    def __eq__(self, other, /):
+    def __eq__(self, other):
         if isinstance(other, GameState):
             return (self.scenario == other.scenario and
                     self.characters == other.characters and
@@ -77,11 +77,11 @@ class Character(Entity):
         )
 
     def __eq__(self, other, /):
-        if isinstance(other, Character):
-            return (super.__eq__(other) and
-                    self.experience == other.experience and
-                    self.loot == other.loot)
-        return False
+        if not isinstance(other, Character):
+            return False
+
+        return super().__eq__(other) and self.experience == other.experience and self.loot == other.loot
+
 
 class Monster(Entity):
     def __init__(
@@ -97,11 +97,10 @@ class Monster(Entity):
     def __str__(self):
         return f"{super().__str__()}, type={self.type})"
 
-    def __eq__(self, other, /):
-        if isinstance(other, Monster):
-            return (super.__eq__(other) and
-                    self.type == other.type)
-        return False
+    def __eq__(self, other):
+        if not isinstance(other, Monster):
+            return False
+        return super().__eq__(other) and self.type == other.type
 
 class Condition:
     def __init__(self, name: str):
