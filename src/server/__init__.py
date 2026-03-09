@@ -3,6 +3,7 @@ from flask import Flask
 from src.homeassistant.lamps import YeeLightLamp
 
 
+
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
