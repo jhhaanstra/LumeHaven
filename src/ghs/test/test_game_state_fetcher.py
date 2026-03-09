@@ -1,11 +1,10 @@
 import unittest
 from pathlib import Path
 
-from src.ghs.client import GameStateReader
+from src.ghs.client import GameStateFetcher
 from src.ghs.model import GameState, Character, Monster, Condition, Element, Health
 
-
-GAME_STATE = GameState(
+EXPECTED_GAME_STATE = GameState(
     scenario=70,
     characters=[
         Character(
@@ -80,29 +79,25 @@ GAME_STATE = GameState(
     },
 )
 
-class TestReadModel(unittest.TestCase):
+
+class TestGameStateFetcher(unittest.TestCase):
 
     def setUp(self):
-        self.actual = self.read_state()
+        resource_path = Path(__file__).parent / "resources" / "test_ghs.sqlite"
+        fetcher = GameStateFetcher(str(resource_path), "74986287-7208-4719-aba3-5fe464f7f713")
+        self.actual = fetcher.fetch_game_state()
 
     def test_characters(self):
-        self.assertEqual(self.actual.characters, GAME_STATE.characters)
+        self.assertEqual(self.actual.characters, EXPECTED_GAME_STATE.characters)
 
     def test_monsters(self):
-        self.assertEqual(self.actual.monsters, GAME_STATE.monsters)
+        self.assertEqual(self.actual.monsters, EXPECTED_GAME_STATE.monsters)
 
     def test_scenario(self):
-        self.assertEqual(self.actual.scenario, GAME_STATE.scenario)
+        self.assertEqual(self.actual.scenario, EXPECTED_GAME_STATE.scenario)
 
     def test_elements(self):
-        self.assertEqual(self.actual.elements, GAME_STATE.elements)
+        self.assertEqual(self.actual.elements, EXPECTED_GAME_STATE.elements)
 
     def test_complete(self):
-        self.assertEqual(self.actual, GAME_STATE)
-
-    @staticmethod
-    def read_state() -> GameState:
-        reader = GameStateReader()
-        resource_path = Path(__file__).parent / "resources" / "game_state.json"
-        with open(resource_path, "r") as f:
-            return reader.from_json_string(f.read())
+        self.assertEqual(self.actual, EXPECTED_GAME_STATE)

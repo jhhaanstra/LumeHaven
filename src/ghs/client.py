@@ -3,11 +3,20 @@ import sqlite3
 
 from src.ghs.model import GameState, Character, Health, Condition, Monster, Element
 
-if __name__ == '__main__':
-    connection = sqlite3.connect("../../ghs/ghs.sqlite")
-    cursor = connection.cursor()
-    result = cursor.execute('SELECT * FROM "main"."games" WHERE id = 1;')
-    print(result.fetchone())
+
+class GameStateFetcher:
+
+    def __init__(self, db_location: str, game_code: str):
+        self.connection = sqlite3.connect(db_location)
+        self.reader = GameStateReader()
+        self.game_code = game_code
+        result = self.connection.execute("SELECT game_id FROM game_codes where game_code = ?;", (game_code,)).fetchone()
+        self.game_id = result[0]
+
+    def fetch_game_state(self) -> GameState:
+        cursor = self.connection.cursor()
+        result = cursor.execute('SELECT game FROM "main"."games" WHERE id = ?;', (self.game_id,))
+        return self.reader.from_json_string(result.fetchone()[0])
 
 
 class GameStateReader:
@@ -63,3 +72,8 @@ class GameStateReader:
             return 2
         else:
             return 0
+
+
+if __name__ == '__main__':
+    fetcher = GameStateFetcher("../../ghs/ghs.sqlite", "74986287-7208-4719-aba3-5fe464f7f713")
+    fetcher.fetch_game_state()
