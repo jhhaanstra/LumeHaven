@@ -47,12 +47,25 @@ class HomeAssistantLight(Lamp, ABC):
         response = get(url, headers=headers)
         return json.loads(response.text)
 
+    def __str__(self):
+        return f"{self.__class__.__name__}(url={self.url}, token={self.token})"
+
+    def __eq__(self, other):
+        if isinstance(other, HomeAssistantLight):
+            return self.url == other.url and self.token == other.token
+        return False
+
 class YeeLightLamp(HomeAssistantLight):
 
     def __init__(self, entity_id: str, url: str, token: str):
         super().__init__(url, token)
         self.entity_id = entity_id
-        state = self._get_entity_state(entity_id)
+        self.turned_on = 'on'
+        self.brightness = 100
+        self.color = [0, 0, 0]
+
+    def refresh_state(self):
+        state = self._get_entity_state(self.entity_id)
         self.turned_on = state.get('state', 'on')
         self.brightness = state.get('brightness', 100)
         self.color = state.get("rgb_color", [0, 0, 0])
@@ -73,6 +86,14 @@ class YeeLightLamp(HomeAssistantLight):
             "brightness": brightness
         })
         self.brightness = brightness
+
+    def __str__(self):
+        return f"{super().__str__()}, entity_id={self.entity_id})"
+
+    def __eq__(self, other):
+        if not isinstance(other, YeeLightLamp):
+            return False
+        return super().__eq__(other) and self.entity_id == other.entity_id
 
 if __name__ == '__main__':
     lamp = YeeLightLamp('light.standing_lamp', str(os.getenv('HS_TOKEN')), str(os.getenv('HS_TOKEN')))

@@ -1,0 +1,12 @@
+ghs:
+  sqlite_db: "ghs/ghs.sqlite"
+  url: "http://localhost:12345"
+  interval_ms: 1000
+
+home_assistant:
+  url: "http://localhost:8123"
+  token: "auth_token"
+
+lamps:
+  - type: "yeelight"
+    id: "lamp-1"

@@ -1,0 +1,15 @@
+ghs:
+  game_code: "74986287-7208-4719-aba3-5fe464f7f713"
+  sqlite_db: "ghs/ghs.sqlite"
+  url: "http://localhost:12345"
+  interval_ms: 1000
+
+home_assistant:
+  url: "http://localhost:8123"
+  token: "auth_token"
+
+lamps:
+  - type: "yeelight"
+    id: "lamp-1"
+  - type: "yeelight"
+    id: "lamp-2"
