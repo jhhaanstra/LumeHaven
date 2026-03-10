@@ -16,6 +16,10 @@ class Lamp(ABC):
 
 class HomeAssistantLight(Lamp, ABC):
 
+    def __init__(self, url: str, token: str):
+        self.url = url
+        self.token = token
+
     @abstractmethod
     def turn_color(self, r: int, g: int, b: int):
         pass
@@ -24,21 +28,19 @@ class HomeAssistantLight(Lamp, ABC):
     def set_brightness(self, brightness: int):
         pass
 
-    @staticmethod
-    def _api_call(endpoint, data):
-        url = "http://192.168.0.156:8123/api" + endpoint
+    def _api_call(self, endpoint: str, data):
+        url = self.url + "/api" + endpoint
         headers = {
-            "Authorization": "Bearer " + os.getenv('HS_TOKEN'),
+            "Authorization": "Bearer " + self.token,
             "content-type": "application/json"
         }
 
         post(url, headers=headers, json=data)
 
-    @staticmethod
-    def _get_entity_state(entity_id) -> dict:
-        url = "http://192.168.0.156:8123/api/states/" + entity_id
+    def _get_entity_state(self, entity_id: str) -> dict:
+        url = self.url + "/api/states/" + entity_id
         headers = {
-            "Authorization": "Bearer " + os.getenv('HS_TOKEN'),
+            "Authorization": "Bearer " + self.token,
             "content-type": "application/json"
         }
 
@@ -47,7 +49,8 @@ class HomeAssistantLight(Lamp, ABC):
 
 class YeeLightLamp(HomeAssistantLight):
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id: str, url: str, token: str):
+        super().__init__(url, token)
         self.entity_id = entity_id
         state = self._get_entity_state(entity_id)
         self.turned_on = state.get('state', 'on')
@@ -72,5 +75,5 @@ class YeeLightLamp(HomeAssistantLight):
         self.brightness = brightness
 
 if __name__ == '__main__':
-    lamp = YeeLightLamp('light.standing_lamp')
+    lamp = YeeLightLamp('light.standing_lamp', str(os.getenv('HS_TOKEN')), str(os.getenv('HS_TOKEN')))
     lamp.turn_color(255, 255, 51)
