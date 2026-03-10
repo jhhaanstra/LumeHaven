@@ -1,11 +1,12 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request
 
 from src.homeassistant.lamps import Lamps, RGB
+from src.server.GameService import GameService
 from src.server.config import Config
 
 config = Config.from_file("config.yml")
 lamps = Lamps(config.get_lamps())
-
+game_service = GameService(config.ghs)
 app = Flask(__name__, instance_relative_config=True)
 
 @app.route('/status')
@@ -33,4 +34,14 @@ def set_lamp_color(entity_id: str):
 def set_brightness(entity_id: str):
     brightness = int(request.data)
     lamps.get_lamp(entity_id).set_brightness(brightness)
+    return "ok", 200
+
+@app.route('/start')
+def start():
+    game_service.start()
+    return "ok", 200
+
+@app.route('/stop')
+def stop():
+    game_service.stop()
     return "ok", 200

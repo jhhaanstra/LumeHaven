@@ -88,7 +88,7 @@ class YeeLightLamp(HomeAssistantLight):
         })
         self.color = rgb.as_list()
 
-
+    # TODO: Currently, turn color needs to be run before being able to set brightness
     def set_brightness(self, brightness: int):
         self._api_call("/services/yeelight/set_color_scene", {
             "entity_id": self.entity_id,
