@@ -63,24 +63,29 @@ class Character(Entity):
         entity_id: str,
         health: "Health",
         conditions: List["Condition"] = None,
+        exhausted: bool = False,
         experience: int = 0,
         loot: int = 0,
     ):
         super().__init__(entity_id, health, conditions)
+        self.exhausted = exhausted
         self.experience = experience
         self.loot = loot
 
     def __str__(self):
         return (
             f"{super().__str__()}, "
-            f"experience={self.experience}, loot={self.loot})"
+            f"exhausted={self.exhausted}, experience={self.experience}, loot={self.loot})"
         )
 
     def __eq__(self, other, /):
         if not isinstance(other, Character):
             return False
 
-        return super().__eq__(other) and self.experience == other.experience and self.loot == other.loot
+        return (super().__eq__(other) and
+                self.exhausted == other.exhausted and
+                self.experience == other.experience and
+                self.loot == other.loot)
 
 
 class Monster(Entity):

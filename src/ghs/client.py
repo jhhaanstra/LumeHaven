@@ -36,6 +36,7 @@ class GameStateReader:
             health=Health(max=int(character['maxHealth']), current=int(character['health'])),
             conditions=self._parse_conditions(character['entityConditions']),
             experience=int(character['experience']),
+            exhausted=bool(character['exhausted']),
             loot=int(character['loot'])
         )
 

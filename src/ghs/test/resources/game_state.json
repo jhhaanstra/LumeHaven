@@ -1,5 +1,5 @@
 {
-  "revision": 4400,
+  "revision": 4408,
   "revisionOffset": 102,
   "edition": "gh",
   "conditions": [],
@@ -44,7 +44,7 @@
         "edition": "gh"
       },
       "total": 1,
-      "killed": 0
+      "killed": 1
     },
     {
       "identifier": {
@@ -54,7 +54,7 @@
         "edition": "gh"
       },
       "total": 1,
-      "killed": 0
+      "killed": 1
     },
     {
       "identifier": {
@@ -283,7 +283,7 @@
           "lastState": "normal",
           "permanent": false,
           "expired": false,
-          "highlight": false
+          "highlight": true
         },
         {
           "name": "strengthen",
@@ -448,13 +448,32 @@
       "loot": 0,
       "lootCards": [],
       "treasures": [],
-      "exhausted": false,
+      "exhausted": true,
       "level": 5,
-      "off": false,
+      "off": true,
       "active": false,
-      "health": 18,
+      "health": -1,
       "maxHealth": 18,
-      "entityConditions": [],
+      "entityConditions": [
+        {
+          "name": "retaliate",
+          "value": 0,
+          "state": "normal",
+          "lastState": "new",
+          "permanent": false,
+          "expired": false,
+          "highlight": false
+        },
+        {
+          "name": "shield",
+          "value": 0,
+          "state": "normal",
+          "lastState": "new",
+          "permanent": false,
+          "expired": false,
+          "highlight": false
+        }
+      ],
       "immunities": [],
       "markers": [],
       "tags": [],
@@ -607,9 +626,9 @@
       "loot": 0,
       "lootCards": [],
       "treasures": [],
-      "exhausted": false,
+      "exhausted": true,
       "level": 4,
-      "off": false,
+      "off": true,
       "active": false,
       "health": 12,
       "maxHealth": 12,
@@ -954,7 +973,7 @@
   "round": 2,
   "roundResets": [],
   "roundResetsHidden": [],
-  "playSeconds": 19,
+  "playSeconds": 131,
   "totalSeconds": 104179,
   "monsterAttackModifierDeck": {
     "current": -1,
