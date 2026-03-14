@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 
 from src.homeassistant.lamps import Lamps, RGB
-from src.server.GameService import GameService
-from src.server.config import Config
+from src.core.GameService import GameService
+from src.core.config import Config
 
 config = Config.from_file("config.yml")
 lamps = Lamps(config.get_lamps())

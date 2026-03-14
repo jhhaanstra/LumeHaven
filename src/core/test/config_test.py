@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import HttpUrl, ValidationError
 
 from src.homeassistant.lamps import YeeLightLamp
-from src.server.config import Config, GHS, LampConfig, HomeAssistantConfig
+from src.core.config import Config, GHS, LampConfig, HomeAssistantConfig
 
 
 class TestConfig(unittest.TestCase):

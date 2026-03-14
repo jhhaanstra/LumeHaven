@@ -2,7 +2,7 @@
 
 To run the server:
 ```commandline
-uv run flask --app server run --debug
+uv run flask --app src.core.app run --debug
 ```
 
 

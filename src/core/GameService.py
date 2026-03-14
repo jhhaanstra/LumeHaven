@@ -1,7 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from src.ghs.client import GameStateFetcher
-from src.server.config import GHS
+from src.core.config import GHS
 
 
 class GameService:
