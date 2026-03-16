@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
-from yeelight import Bulb
+from yeelight import Bulb, Flow, RGBTransition
 
 
 class RGB(BaseModel):
@@ -23,6 +23,10 @@ class Lamp(ABC):
     def set_brightness(self, brightness: int):
         pass
 
+    @abstractmethod
+    def pulse(self, rgb: RGB):
+        pass
+
 
 class YeeLightLamp(Lamp):
     """
@@ -39,6 +43,17 @@ class YeeLightLamp(Lamp):
 
     def set_brightness(self, brightness: int):
         self.bulb.set_brightness(brightness)
+
+    def pulse(self, rgb: RGB):
+        transitions = [
+            RGBTransition(rgb.r, rgb.g, rgb.b, duration=300),
+        ]
+
+        flow = Flow(
+            count=2,
+            transitions=transitions
+        )
+        self.bulb.start_flow(flow)
 
     def __str__(self):
         return f"{super().__str__()}, entity_id={self.entity_id}, ip={self.ip})"

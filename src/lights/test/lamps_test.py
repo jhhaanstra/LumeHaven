@@ -18,3 +18,6 @@ class TestYeelightLamp(unittest.TestCase):
 
     def test_set_high_brightness(self):
         self.lamp.set_brightness(100)
+
+    def test_pulse(self):
+        self.lamp.pulse(RGB(r=255, g=0, b=0))
