@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 
-from src.homeassistant.lamps import Lamps, RGB
+from src.lights.lamps import Lamps, RGB
 from src.core.GameService import GameService
 from src.core.config import Config
 

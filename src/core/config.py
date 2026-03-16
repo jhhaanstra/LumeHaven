@@ -4,7 +4,7 @@ import yaml
 
 from pydantic import BaseModel, HttpUrl, ValidationError, Field
 
-from src.homeassistant.lamps import Lamp, YeeLightLamp
+from src.lights.lamps import Lamp, YeeLightLamp
 
 
 class GHS(BaseModel):
@@ -14,19 +14,14 @@ class GHS(BaseModel):
     interval_ms: int
 
 
-class HomeAssistantConfig(BaseModel):
-    url: str
-    token: str
-
-
 class LampConfig(BaseModel):
     type: Literal["yeelight"]
     id: str
+    ip: str
 
 
 class Config(BaseModel):
     ghs: GHS
-    home_assistant: HomeAssistantConfig
     lamp_configs: list[LampConfig] = Field(alias="lamps")
 
     @staticmethod
@@ -41,7 +36,7 @@ class Config(BaseModel):
 
     def _get_lamp_from_config(self, lamp_config: LampConfig) -> Lamp:
         if lamp_config.type == "yeelight":
-            return YeeLightLamp(lamp_config.id, self.home_assistant.url, self.home_assistant.token)
+            return YeeLightLamp(lamp_config.id, lamp_config.ip)
 
         raise ValidationError("Illegal lamp type provided: " + lamp_config.type)
 

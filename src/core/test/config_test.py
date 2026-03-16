@@ -1,10 +1,11 @@
 import unittest
 from pathlib import Path
 
+import pytest
 from pydantic import HttpUrl, ValidationError
 
-from src.homeassistant.lamps import YeeLightLamp
-from src.core.config import Config, GHS, LampConfig, HomeAssistantConfig
+from src.core.config import Config, GHS, LampConfig
+from src.lights.lamps import YeeLightLamp, RGB
 
 
 class TestConfig(unittest.TestCase):
@@ -26,30 +27,22 @@ class TestConfig(unittest.TestCase):
             LampConfig(
                 type="yeelight",
                 id="lamp-1",
+                ip="1.2.3.4"
             ),
             LampConfig(
                 type="yeelight",
                 id="lamp-2",
+                ip="4.3.2.1"
             ),
         ])
 
-    def test_home_assistant_config(self):
-        self.assertEqual(self.config.home_assistant, HomeAssistantConfig(
-            url="http://localhost:8123",
-            token="auth_token",
-        ))
-
     def test_get_lamps(self):
         self.assertEqual(
-            self.config.get_lamps(),
             [
-                YeeLightLamp(
-                    entity_id="lamp-1", url="http://localhost:8123", token="auth_token"
-                ),
-                YeeLightLamp(
-                    entity_id="lamp-2", url="http://localhost:8123", token="auth_token"
-                ),
+                YeeLightLamp(entity_id="lamp-1", ip="1.2.3.4"),
+                YeeLightLamp(entity_id="lamp-2", ip="4.3.2.1"),
             ],
+            self.config.get_lamps()
         )
 
     def test_invalid_lamp_input(self):

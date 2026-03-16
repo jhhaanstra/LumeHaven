@@ -4,12 +4,10 @@ ghs:
   url: "http://localhost:12345"
   interval_ms: 1000
 
-home_assistant:
-  url: "http://localhost:8123"
-  token: "auth_token"
-
 lamps:
   - type: "yeelight"
     id: "lamp-1"
+    ip: "1.2.3.4"
   - type: "yeelight"
     id: "lamp-2"
+    ip: "4.3.2.1"

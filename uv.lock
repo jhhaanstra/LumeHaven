@@ -114,6 +114,15 @@ wheels = [
 ]
 
 [[package]]
+name = "ifaddr"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e8/ac/fb4c578f4a3256561548cd825646680edcadb9440f3f68add95ade1eb791/ifaddr-0.2.0.tar.gz", hash = "sha256:cc0cbfcaabf765d44595825fb96a99bb12c79716b73b44330ea38ee2b0c4aed4", size = 10485, upload-time = "2022-06-15T21:40:27.561Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/1f/19ebc343cc71a7ffa78f17018535adc5cbdd87afb31d7c34874680148b32/ifaddr-0.2.0-py3-none-any.whl", hash = "sha256:085e0305cfe6f16ab12d72e2024030f5d52674afad6911bb1eee207177b8a748", size = 12314, upload-time = "2022-06-15T21:40:25.756Z" },
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -188,6 +197,7 @@ dependencies = [
     { name = "pytest" },
     { name = "pyyaml" },
     { name = "requests" },
+    { name = "yeelight" },
 ]
 
 [package.dev-dependencies]
@@ -205,6 +215,7 @@ requires-dist = [
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "requests", specifier = ">=2.32.5" },
+    { name = "yeelight", specifier = ">=0.7.16" },
 ]
 
 [package.metadata.requires-dev]
@@ -531,4 +542,16 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/61/f1/ee81806690a87dab5f5653c1f146c92bc066d7f4cebc603ef88eb9e13957/werkzeug-3.1.6.tar.gz", hash = "sha256:210c6bede5a420a913956b4791a7f4d6843a43b6fcee4dfa08a65e93007d0d25", size = 864736, upload-time = "2026-02-19T15:17:18.884Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4d/ec/d58832f89ede95652fd01f4f24236af7d32b70cab2196dfcc2d2fd13c5c2/werkzeug-3.1.6-py3-none-any.whl", hash = "sha256:7ddf3357bb9564e407607f988f683d72038551200c704012bb9a4c523d42f131", size = 225166, upload-time = "2026-02-19T15:17:17.475Z" },
+]
+
+[[package]]
+name = "yeelight"
+version = "0.7.16"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ifaddr" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7a/b4/0332cd347105b57905bb29e7e16b028b4238ed334328b3a776b5946099be/yeelight-0.7.16.tar.gz", hash = "sha256:98946054867a1cdd311cf663a8b962a09942cea97d118fd209bf36266ca2e4d0", size = 61392, upload-time = "2025-01-28T12:20:16.804Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ee/33/71fd161c8be0ec84c4871b562be1d1104857008b7fd227973b9c2eabcfa9/yeelight-0.7.16-py3-none-any.whl", hash = "sha256:b29803899b6b88b958d5a857fc19938132f92da365ca8627115ee9be27edcedc", size = 40481, upload-time = "2025-01-28T12:20:14.558Z" },
 ]
