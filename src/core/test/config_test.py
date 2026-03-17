@@ -1,10 +1,9 @@
 import unittest
 from pathlib import Path
 
-import pytest
 from pydantic import HttpUrl, ValidationError
 
-from src.core.config import Config, GHS, LampConfig
+from src.core.config import Config, GHS, LampConfig, EventEffect
 from src.lights.lamps import YeeLightLamp, RGB
 
 
@@ -44,6 +43,19 @@ class TestConfig(unittest.TestCase):
             ],
             self.config.get_lamps()
         )
+
+    def test_get_effects(self):
+        self.assertEqual(
+            [
+                EventEffect(event="fire_element_active", effect="pulse", rgb=(255, 0, 0)),
+                EventEffect(event="ice_element_active", effect="pulse", rgb=(1, 40, 255))
+            ],
+            self.config.effects
+        )
+
+    def test_invalid_effect_provided(self):
+        with self.assertRaises(ValueError):
+            EventEffect(event="fire_element_active", effect="invalid-effect", rgb=(255, 0, 0))
 
     def test_invalid_lamp_input(self):
         test_config_path = str(Path(__file__).parent / "resources" / "invalid_lamp_test_config.yaml")

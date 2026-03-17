@@ -11,3 +11,11 @@ lamps:
   - type: "yeelight"
     id: "lamp-2"
     ip: "4.3.2.1"
+
+effects:
+  - event: "fire_element_active"
+    effect: "pulse"
+    rgb: [255, 0, 0]
+  - event: "ice_element_active"
+    effect: "pulse"
+    rgb: [1, 40, 255]

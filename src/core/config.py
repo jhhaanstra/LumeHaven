@@ -1,10 +1,19 @@
-from typing import Literal
+from typing import Literal, Union, List
 
 import yaml
 
 from pydantic import BaseModel, HttpUrl, ValidationError, Field
 
-from src.lights.lamps import Lamp, YeeLightLamp
+
+from src.lights.lamps import Lamp, YeeLightLamp, RGB
+
+
+
+EffectType = Literal["add_to_cycle", "pulse"]
+
+
+class EffectsConfig(BaseModel):
+    effects: List[EventEffect]
 
 
 class GHS(BaseModel):
@@ -20,9 +29,16 @@ class LampConfig(BaseModel):
     ip: str
 
 
+class EventEffect(BaseModel):
+    event: str
+    effect: EffectType
+    rgb: tuple[int, int, int]
+
+
 class Config(BaseModel):
     ghs: GHS
     lamp_configs: list[LampConfig] = Field(alias="lamps")
+    effects: list[EventEffect]
 
     @staticmethod
     def from_file(location: str) -> Config:
@@ -34,7 +50,8 @@ class Config(BaseModel):
     def get_lamps(self) -> list[Lamp]:
         return list(map(self._get_lamp_from_config, self.lamp_configs))
 
-    def _get_lamp_from_config(self, lamp_config: LampConfig) -> Lamp:
+    @staticmethod
+    def _get_lamp_from_config(lamp_config: LampConfig) -> Lamp:
         if lamp_config.type == "yeelight":
             return YeeLightLamp(lamp_config.id, lamp_config.ip)
 
