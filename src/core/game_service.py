@@ -1,5 +1,9 @@
+from abc import ABC, abstractmethod
+
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
+
+from apscheduler.schedulers.base import STATE_RUNNING
 
 from src.core.events import (
     FireElementActive,
@@ -18,7 +22,7 @@ from src.core.events import (
     MonsterReceivedDamage,
 )
 from src.ghs.client import GameStateFetcher
-from src.core.config import GHS
+from src.core.config import Config
 from src.ghs.model import GameState
 
 
@@ -41,14 +45,11 @@ class GameService:
         MonsterReceivedDamage(),
     ]
 
-    def __init__(self, config: GHS):
+    def __init__(self, event_publisher: EventPublisher, interval_ms: int):
         self.game_state_fetcher = None
         self.current_state: GameState = None
-
         self.scheduler = BackgroundScheduler()
-        self.sqlite_db = config.sqlite_db
-        self.game_code = config.game_code
-        self.scheduler.add_job(self.run_job, "interval", seconds=config.interval_ms / 1000)
+        self.scheduler.add_job(event_publisher.run, "interval", seconds=interval_ms / 1000)
 
     def start(self):
         self.scheduler.start()
@@ -56,7 +57,45 @@ class GameService:
     def stop(self):
         self.scheduler.pause()
 
-    def run_job(self):
+    def is_started(self) -> bool:
+        return self.scheduler.state == STATE_RUNNING
+
+
+class EventPublisher(ABC):
+
+    @abstractmethod
+    def run(self):
+        pass
+
+class DbReadingEventPublisher(EventPublisher):
+    events = [
+        FireElementActive(),
+        IceElementActive(),
+        AirElementActive(),
+        EarthElementActive(),
+        LightElementActive(),
+        DarkElementActive(),
+        LootFound(),
+        MonsterDied(),
+        MonsterSpawned(),
+        CharacterDied(),
+        CharacterHealedEvent(),
+        CharacterReceivedDamage(),
+        CharacterGainedExperience(),
+        MonsterReceivedDamage(),
+    ]
+
+    @staticmethod
+    def from_config(config: Config) -> EventPublisher:
+        return DbReadingEventPublisher(config.ghs.sqlite_db, config.ghs.game_code)
+
+    def __init__(self, sqlite_db: str, game_code: str):
+        self.game_state_fetcher = None
+        self.current_state: GameState = None
+        self.sqlite_db = sqlite_db
+        self.game_code = game_code
+
+    def run(self):
         if not self.game_state_fetcher:
             self.game_state_fetcher = GameStateFetcher(self.sqlite_db, self.game_code)
             self.current_state = self.game_state_fetcher.fetch_game_state()
@@ -71,3 +110,4 @@ class GameService:
 
     def _check_for_events(self, old_game_state: GameState, new_game_state: GameState):
         return [event for event in self.events if event.matches(old_game_state, new_game_state)]
+

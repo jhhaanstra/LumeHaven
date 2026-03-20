@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import HttpUrl, ValidationError
 
 from src.core.config import Config, GHS, LampConfig, EventEffect
-from src.lights.lamps import YeeLightLamp, RGB
+from src.lights.lamps import YeeLightLamp
 
 
 class TestConfig(unittest.TestCase):
@@ -66,3 +66,6 @@ class TestConfig(unittest.TestCase):
         test_config_path = str(Path(__file__).parent / "resources" / "missing_fields_test_config.yaml")
         with self.assertRaises(ValidationError):
             callable(Config.from_file(test_config_path))
+
+    def test_start_on_boot_false_by_default(self):
+        self.assertFalse(self.config.start_on_boot)

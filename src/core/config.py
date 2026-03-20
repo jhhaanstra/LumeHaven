@@ -34,6 +34,7 @@ class EventEffect(BaseModel):
 
 
 class Config(BaseModel):
+    start_on_boot: bool = Field(default=False)
     ghs: GHS
     lamp_configs: list[LampConfig] = Field(alias="lamps")
     effects: list[EventEffect]
