@@ -40,16 +40,24 @@ class LampService(EventSubScriber):
 
     @staticmethod
     def from_config(config: Config) -> LampService:
-        return LampService(config.get_lamps(), config.effects)
+        return LampService(
+            lamps=config.get_lamps(),
+            effects=config.effects,
+            main_flow=list(map(lambda rgb: RGB(r=rgb[0], b=rgb[1], g=rgb[2]), config.main_flow))
+        )
 
-    def __init__(self, lamps: list[Lamp], effects: list[EventEffect]):
+    def __init__(self, lamps: list[Lamp], effects: list[EventEffect], main_flow: list[RGB]):
         self.lamps = lamps
         self.handlers: dict[object, PulseEventHandler] = {}
+        self.main_flow = main_flow
 
         for effect in effects:
             if effect.effect == "pulse":
                 rgb = RGB(r=effect.rgb[0], g=effect.rgb[1], b=effect.rgb[2])
                 self.handlers[EVENTS_MAP[effect.event].__class__] = PulseEventHandler(rgb)
+
+        for lamp in lamps:
+            lamp.cycle(self.main_flow)
 
     def on_event(self, event: Event):
         if event.__class__ not in self.handlers:

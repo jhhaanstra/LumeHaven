@@ -14,7 +14,8 @@ class LampServiceTest(unittest.TestCase):
 
         lamp_service = LampService(
             [lamp1, lamp2],
-            [EventEffect(event="loot_found", effect="pulse", rgb=(100, 50, 100))]
+            [EventEffect(event="loot_found", effect="pulse", rgb=(100, 50, 100))],
+            []
         )
 
         lamp_service.on_event(LootFound())
@@ -28,12 +29,23 @@ class LampServiceTest(unittest.TestCase):
 
         lamp_service = LampService(
             [lamp1, lamp2],
-            [EventEffect(event="monster_died", effect="pulse", rgb=(100, 50, 100))]
+            [EventEffect(event="monster_died", effect="pulse", rgb=(100, 50, 100))],
+            []
         )
 
         lamp_service.on_event(LootFound())
         self.assertFalse(lamp1.pulses)
         self.assertFalse(lamp2.pulses)
+
+    def test_configure_main_flow_to_lamps(self):
+        lamp1 = TestLamp()
+        lamp2 = TestLamp()
+
+        flow = [RGB(r=100, g=50, b=100), RGB(r=50, g=100, b=50)]
+        LampService([lamp1, lamp2], [], flow)
+
+        self.assertEqual(lamp1.current_cycle, flow)
+        self.assertEqual(lamp2.current_cycle, flow)
 
 
 class TestLamp(Lamp):
@@ -42,7 +54,7 @@ class TestLamp(Lamp):
         self.rgb: RGB = RGB(r=0, g=0, b=0)
         self.brightness: int = 0
         self.pulses: list[RGB] = []
-        self.cycle: list[RGB] = []
+        self.current_cycle: list[RGB] = []
 
     def turn_color(self, rgb: RGB):
         self.rgb = rgb
@@ -54,4 +66,4 @@ class TestLamp(Lamp):
         self.pulses.append(rgb)
 
     def cycle(self, rgb_flow: list[RGB]):
-        self.cycle = rgb_flow
+        self.current_cycle = rgb_flow

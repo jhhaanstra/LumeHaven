@@ -4,6 +4,10 @@ ghs:
   url: "http://localhost:12345"
   interval_ms: 1000
 
+main_flow:
+  - [0, 128, 255]
+  - [204, 102, 0]
+
 lamps:
   - type: "yeelight"
     id: "lamp-1"

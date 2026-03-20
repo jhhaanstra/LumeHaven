@@ -53,6 +53,12 @@ class TestConfig(unittest.TestCase):
             self.config.effects
         )
 
+    def test_main_flow(self):
+        self.assertEqual(
+            [(0, 128, 255), (204, 102, 0)],
+            self.config.main_flow
+        )
+
     def test_invalid_effect_provided(self):
         with self.assertRaises(ValueError):
             EventEffect(event="fire_element_active", effect="invalid-effect", rgb=(255, 0, 0))
@@ -69,3 +75,4 @@ class TestConfig(unittest.TestCase):
 
     def test_start_on_boot_false_by_default(self):
         self.assertFalse(self.config.start_on_boot)
+
