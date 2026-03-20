@@ -3,6 +3,7 @@ from logging import StreamHandler
 from flask import Flask, jsonify, request
 import logging
 
+from src.core.lamp_service import LampService
 from src.lights.lamps import Lamps, RGB
 from src.core.game_service import GameService, DbReadingEventPublisher
 from src.core.config import Config
@@ -16,11 +17,14 @@ logging.basicConfig(
 config = Config.from_file("config.yml")
 lamps = Lamps(config.get_lamps())
 event_publisher = DbReadingEventPublisher.from_config(config)
+lamp_service = LampService.from_config(config)
+event_publisher.subscribe(lamp_service)
 game_service = GameService(event_publisher, config.ghs.interval_ms)
 if config.start_on_boot:
+    logging.info("start_on_boot set to true, immediately starting game loop")
     game_service.start()
-app = Flask(__name__, instance_relative_config=True)
 
+app = Flask(__name__, instance_relative_config=True)
 
 @app.route("/status")
 def status():
