@@ -1,13 +1,25 @@
+from logging import StreamHandler
+
 from flask import Flask, jsonify, request
+import logging
 
 from src.lights.lamps import Lamps, RGB
 from src.core.GameService import GameService
 from src.core.config import Config
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] %(levelname)s in %(module)s: %(message)s",
+    handlers=[ logging.FileHandler('app.log'),
+               StreamHandler() ]
+)
+
 config = Config.from_file("config.yml")
 lamps = Lamps(config.get_lamps())
 game_service = GameService(config.ghs)
 app = Flask(__name__, instance_relative_config=True)
+
+
 
 @app.route('/status')
 def status():

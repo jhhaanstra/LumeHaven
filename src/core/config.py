@@ -1,12 +1,10 @@
-from typing import Literal, Union, List
+from typing import Literal, List
 
-import yaml
+import yaml, logging
 
 from pydantic import BaseModel, HttpUrl, ValidationError, Field
 
-
-from src.lights.lamps import Lamp, YeeLightLamp, RGB
-
+from src.lights.lamps import Lamp, YeeLightLamp
 
 
 EffectType = Literal["add_to_cycle", "pulse"]
@@ -44,6 +42,8 @@ class Config(BaseModel):
     def from_file(location: str) -> Config:
         with open(location) as file:
             data = yaml.safe_load(file)
+            logging.info("Loading config")
+            logging.info(yaml.dump(data, sort_keys=False, default_flow_style=False))
 
         return Config.model_validate(data)
 
@@ -56,8 +56,3 @@ class Config(BaseModel):
             return YeeLightLamp(lamp_config.id, lamp_config.ip)
 
         raise ValidationError("Illegal lamp type provided: " + lamp_config.type)
-
-
-if __name__ == "__main__":
-    config = Config.from_file("../../config.yml")
-    print(config)

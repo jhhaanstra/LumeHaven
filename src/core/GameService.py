@@ -1,4 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
+import logging
 
 from src.core.events import (
     FireElementActive,
@@ -61,10 +62,10 @@ class GameService:
             self.current_state = self.game_state_fetcher.fetch_game_state()
         else:
             new_state = self.game_state_fetcher.fetch_game_state()
-            print(str(new_state))
+            logging.debug(f"State fetched: {str(new_state)}")
             matching_events = self._check_for_events(self.current_state, new_state)
             for event in matching_events:
-                print(event.__class__.__name__)
+                logging.info(f"Event triggered: {event.__class__.__name__}")
 
             self.current_state = new_state
 
