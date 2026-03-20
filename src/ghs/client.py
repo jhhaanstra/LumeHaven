@@ -60,8 +60,7 @@ class GameStateReader:
         elements_dict = {}
         for element in elements:
             state = self._parse_state(element['state'])
-            if state != 0:
-                elements_dict[Element[element['type'].upper()]] = state
+            elements_dict[Element[element['type'].upper()]] = state
 
         return elements_dict
 
