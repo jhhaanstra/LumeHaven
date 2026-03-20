@@ -29,28 +29,12 @@ from src.ghs.model import GameState
 
 class GameService:
 
-    events = [
-        FireElementActive(),
-        IceElementActive(),
-        AirElementActive(),
-        EarthElementActive(),
-        LightElementActive(),
-        DarkElementActive(),
-        LootFound(),
-        MonsterDied(),
-        MonsterSpawned(),
-        CharacterDied(),
-        CharacterHealedEvent(),
-        CharacterReceivedDamage(),
-        CharacterGainedExperience(),
-        MonsterReceivedDamage(),
-    ]
-
     def __init__(self, event_publisher: EventPublisher, interval_ms: int):
         self._game_state_fetcher = None
         self._current_state: GameState = None
+        self._event_publisher = event_publisher
         self._scheduler = BackgroundScheduler()
-        self._scheduler.add_job(event_publisher.publish_events, "interval", seconds=interval_ms / 1000)
+        self._scheduler.add_job(self._event_publisher.publish_events, "interval", seconds=interval_ms / 1000)
 
     def start(self):
         self._scheduler.start()
@@ -65,13 +49,17 @@ class GameService:
 class EventPublisher(ABC):
 
     _subscribers: list[EventSubScriber] = []
+    _queued_events: list[Event] = []
 
     @abstractmethod
     def _check_events(self) -> list[Event]:
         pass
 
     def publish_events(self):
-        for event in self._check_events():
+        publishing = self._queued_events + self._check_events()
+        self._queued_events.clear()
+
+        for event in publishing:
             logging.info(f"Event triggered: {event.__class__.__name__}")
             for subscriber in self._subscribers:
                 subscriber.on_event(event)
@@ -79,6 +67,8 @@ class EventPublisher(ABC):
     def subscribe(self, subscriber: EventSubScriber):
         self._subscribers.append(subscriber)
 
+    def queue_event(self, event: Event):
+        self._queued_events.append(event)
 
 class EventSubScriber(ABC):
 
