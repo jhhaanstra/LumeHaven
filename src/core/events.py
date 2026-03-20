@@ -16,7 +16,7 @@ class ElementActive(Event):
 
     def matches(self, old_game_state: GameState, new_game_state: GameState) -> bool:
         if self.element in new_game_state.elements:
-            return new_game_state.elements[self.element] > 0
+            return old_game_state.elements[self.element] == 0 and  new_game_state.elements[self.element] > 0
 
         return False
 
@@ -52,6 +52,54 @@ class LightElementActive(ElementActive):
 
 
 class DarkElementActive(ElementActive):
+
+    def __init__(self):
+        super().__init__(Element.DARK)
+
+
+class ElementFades(Event):
+
+    def __init__(self, element: Element):
+        self.element = element
+
+    def matches(self, old_game_state: GameState, new_game_state: GameState) -> bool:
+        if self.element in new_game_state.elements:
+            return old_game_state.elements[self.element] > 0 and new_game_state.elements[self.element] == 0
+
+        return False
+
+
+class FireElementFades(ElementFades):
+
+    def __init__(self):
+        super().__init__(Element.FIRE)
+
+
+class IceElementFades(ElementFades):
+
+    def __init__(self):
+        super().__init__(Element.ICE)
+
+
+class AirElementFades(ElementFades):
+
+    def __init__(self):
+        super().__init__(Element.AIR)
+
+
+class EarthElementFades(ElementFades):
+
+    def __init__(self):
+        super().__init__(Element.EARTH)
+
+
+class LightElementFades(ElementFades):
+
+    def __init__(self):
+        super().__init__(Element.LIGHT)
+
+
+class DarkElementFades(ElementFades):
 
     def __init__(self):
         super().__init__(Element.DARK)

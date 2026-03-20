@@ -15,6 +15,12 @@ from src.core.events import (
     CharacterReceivedDamage,
     CharacterGainedExperience,
     MonsterReceivedDamage,
+    FireElementFades,
+    IceElementFades,
+    AirElementFades,
+    EarthElementFades,
+    LightElementFades,
+    DarkElementFades,
 )
 from src.ghs.model import Element, GameState, Character, Health, Monster
 
@@ -34,24 +40,75 @@ class TestElementActive(unittest.TestCase):
         for element in self.element_events.keys():
             element_active = self.element_events[element]
             before = create_game_state()
-            after = create_game_state(elements={element: 1})
+            after = create_game_state()
+            after.elements[element] = 1
             self.assertTrue(element_active.matches(before, after))
+            self.assertFalse(element_active.matches(after, after))
 
     def test_element_strongly_active(self):
         for element in self.element_events.keys():
             element_active = self.element_events[element]
             before = create_game_state()
-            after = create_game_state(elements={element: 2})
+            after = create_game_state()
+            after.elements[element] = 2
             self.assertTrue(element_active.matches(before, after))
+            self.assertFalse(element_active.matches(after, after))
 
     def test_element_not_active(self):
         for element in self.element_events.keys():
             element_active = self.element_events[element]
             before = create_game_state()
-            after = create_game_state(elements={element: 0})
+            after = create_game_state()
+            after.elements[element] = 0
             self.assertFalse(element_active.matches(before, after))
 
-    def test_element_not_present(self):
+
+class TestElementInactive(unittest.TestCase):
+
+    element_events = {
+        Element.FIRE: FireElementFades(),
+        Element.ICE: IceElementFades(),
+        Element.AIR: AirElementFades(),
+        Element.EARTH: EarthElementFades(),
+        Element.LIGHT: LightElementFades(),
+        Element.DARK: DarkElementFades(),
+    }
+
+    def test_element_active(self):
+        for element in self.element_events.keys():
+            element_active = self.element_events[element]
+            before = create_game_state()
+            after = create_game_state()
+            after.elements[element] = 1
+            self.assertFalse(element_active.matches(before, after))
+
+    def test_element_strongly_active(self):
+        for element in self.element_events.keys():
+            element_active = self.element_events[element]
+            before = create_game_state()
+            after = create_game_state()
+            after.elements[element] = 2
+            self.assertFalse(element_active.matches(before, after))
+
+    def test_element_from_active(self):
+        for element in self.element_events.keys():
+            element_active = self.element_events[element]
+            before = create_game_state()
+            before.elements[element] = 1
+            after = create_game_state()
+            after.elements[element] = 0
+            self.assertTrue(element_active.matches(before, after))
+
+    def test_element_from_strongly_active(self):
+        for element in self.element_events.keys():
+            element_active = self.element_events[element]
+            before = create_game_state()
+            before.elements[element] = 2
+            after = create_game_state()
+            after.elements[element] = 0
+            self.assertTrue(element_active.matches(before, after))
+
+    def test_element_not_active(self):
         for element in self.element_events.keys():
             element_active = self.element_events[element]
             before = create_game_state()
@@ -330,12 +387,10 @@ class TestCharacterReceivedDamage(unittest.TestCase):
         return Character(entity_id, Health(10, health), [], False, 0, 0)
 
 
-def create_game_state(scenario= 1, characters=None, monsters=None, elements=None) -> GameState:
-    if elements is None:
-        elements = {}
+def create_game_state(scenario= 1, characters=None, monsters=None) -> GameState:
     if monsters is None:
         monsters = []
     if characters is None:
         characters = []
 
-    return GameState(scenario, characters, monsters, elements)
+    return GameState(scenario, characters, monsters, { e : 0 for e in Element })
