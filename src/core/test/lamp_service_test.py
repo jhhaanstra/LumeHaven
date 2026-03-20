@@ -42,6 +42,7 @@ class TestLamp(Lamp):
         self.rgb: RGB = RGB(r=0, g=0, b=0)
         self.brightness: int = 0
         self.pulses: list[RGB] = []
+        self.cycle: list[RGB] = []
 
     def turn_color(self, rgb: RGB):
         self.rgb = rgb
@@ -51,3 +52,6 @@ class TestLamp(Lamp):
 
     def pulse(self, rgb: RGB):
         self.pulses.append(rgb)
+
+    def cycle(self, rgb_flow: list[RGB]):
+        self.cycle = rgb_flow

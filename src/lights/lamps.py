@@ -27,6 +27,10 @@ class Lamp(ABC):
     def pulse(self, rgb: RGB):
         pass
 
+    @abstractmethod
+    def cycle(self, rgb_flow: list[RGB]):
+        pass
+
 
 class YeeLightLamp(Lamp):
     """
@@ -52,6 +56,13 @@ class YeeLightLamp(Lamp):
         flow = Flow(
             count=2,
             transitions=transitions
+        )
+        self.bulb.start_flow(flow)
+
+    def cycle(self, rgb_flow: list[RGB]):
+        flow = Flow(
+            count=0,
+            transitions= list(map(lambda rgb : RGBTransition(rgb.r, rgb.g, rgb.b, duration=5000), rgb_flow))
         )
         self.bulb.start_flow(flow)
 
