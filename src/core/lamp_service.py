@@ -40,24 +40,30 @@ class LampService(EventSubScriber):
 
     @staticmethod
     def from_config(config: Config) -> LampService:
+        scenes = {}
+        for scene in config.scenes:
+            colors = list(map(lambda rgb: RGB(r=rgb[0], b=rgb[1], g=rgb[2]), scene.colors))
+            scenes[scene.name] = colors
+
         return LampService(
             lamps=config.get_lamps(),
             effects=config.effects,
-            main_flow=list(map(lambda rgb: RGB(r=rgb[0], b=rgb[1], g=rgb[2]), config.main_flow))
+            scenes=scenes,
+            main_scene=scenes[config.main_scene]
         )
 
-    def __init__(self, lamps: list[Lamp], effects: list[EventEffect], main_flow: list[RGB]):
-        self.lamps = lamps
-        self.handlers: dict[object, PulseEventHandler] = {}
-        self.main_flow = main_flow
+    def __init__(self, lamps: list[Lamp], effects: list[EventEffect], scenes: dict[str, list[RGB]], main_scene: list[RGB]):
+        self.lamps: list[Lamp] = lamps
+        self.main_flow: list[RGB] = main_scene
+        self.scenes: dict[str, list[RGB]] = scenes
 
+        self.handlers: dict[object, PulseEventHandler] = {}
         for effect in effects:
             if effect.effect == "pulse":
                 rgb = RGB(r=effect.rgb[0], g=effect.rgb[1], b=effect.rgb[2])
                 self.handlers[EVENTS_MAP[effect.event].__class__] = PulseEventHandler(rgb)
 
-        for lamp in lamps:
-            lamp.cycle(self.main_flow)
+        self._update_lamps()
 
     def on_event(self, event: Event):
         if event.__class__ not in self.handlers:
@@ -65,6 +71,11 @@ class LampService(EventSubScriber):
 
         for lamp in self.lamps:
             self.handlers[event.__class__].handle(lamp)
+
+    def _update_lamps(self, ):
+        for lamp in self.lamps:
+            lamp.cycle(self.main_flow)
+
 
 class PulseEventHandler:
 

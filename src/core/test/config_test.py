@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import HttpUrl, ValidationError
 
-from src.core.config import Config, GHS, LampConfig, EventEffect
+from src.core.config import Config, GHS, LampConfig, EventEffect, Scene
 from src.lights.lamps import YeeLightLamp
 
 
@@ -53,10 +53,16 @@ class TestConfig(unittest.TestCase):
             self.config.effects
         )
 
-    def test_main_flow(self):
+    def test_main_scene(self):
+        self.assertEqual("tavern", self.config.main_scene)
+
+    def test_scenes(self):
         self.assertEqual(
-            [(0, 128, 255), (204, 102, 0)],
-            self.config.main_flow
+            [
+                Scene(name="tavern", colors=[(1, 2, 3), (3, 2, 1)]),
+                Scene(name="cave", colors=[(100, 123, 321), (234, 123, 10)]),
+            ],
+            self.config.scenes
         )
 
     def test_invalid_effect_provided(self):

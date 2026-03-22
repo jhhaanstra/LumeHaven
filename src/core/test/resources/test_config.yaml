@@ -4,9 +4,7 @@ ghs:
   url: "http://localhost:12345"
   interval_ms: 1000
 
-main_flow:
-  - [0, 128, 255]
-  - [204, 102, 0]
+main_scene: "tavern"
 
 lamps:
   - type: "yeelight"
@@ -23,3 +21,13 @@ effects:
   - event: "ice_element_active"
     effect: "pulse"
     rgb: [1, 40, 255]
+
+scenes:
+  - name: "tavern"
+    colors:
+      - [1, 2, 3]
+      - [3, 2, 1]
+  - name: "cave"
+    colors:
+      - [100, 123, 321]
+      - [234, 123, 10]

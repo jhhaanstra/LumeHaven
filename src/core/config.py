@@ -33,12 +33,18 @@ class EventEffect(BaseModel):
     rgb: tuple[int, int, int]
 
 
+class Scene(BaseModel):
+    name: str
+    colors: list[tuple[int, int, int]]
+
+
 class Config(BaseModel):
     start_on_boot: bool = Field(default=False)
-    main_flow: list[tuple[int, int, int]]
+    main_scene: str
     ghs: GHS
     lamp_configs: list[LampConfig] = Field(alias="lamps")
     effects: list[EventEffect]
+    scenes: list[Scene]
 
     @staticmethod
     def from_file(location: str) -> Config:
