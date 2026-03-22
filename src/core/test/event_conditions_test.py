@@ -1,6 +1,6 @@
 import unittest
 
-from src.core.events import (
+from src.core.event_conditions import (
     FireElementActive,
     IceElementActive,
     AirElementActive,
@@ -11,7 +11,7 @@ from src.core.events import (
     MonsterDied,
     MonsterSpawned,
     CharacterDied,
-    CharacterHealedEvent,
+    CharacterHealed,
     CharacterReceivedDamage,
     CharacterGainedExperience,
     MonsterReceivedDamage,
@@ -298,25 +298,25 @@ class TestCharacterHealed(unittest.TestCase):
     def test_when_character_healed_then_match(self):
         before = create_game_state(characters=[self._create_character("c1", 1)])
         after = create_game_state(characters=[self._create_character("c1", 10)])
-        event = CharacterHealedEvent()
+        event = CharacterHealed()
         self.assertTrue(event.matches(before, after))
 
     def test_when_character_not_healed_then_dont_match(self):
         before = create_game_state(characters=[self._create_character("c1", 10)])
         after = create_game_state(characters=[self._create_character("c1", 10)])
-        event = CharacterHealedEvent()
+        event = CharacterHealed()
         self.assertFalse(event.matches(before, after))
 
     def test_when_health_lowered_then_dont_match(self):
         before = create_game_state(characters=[self._create_character("c1", 10)])
         after = create_game_state(characters=[self._create_character("c1", 1)])
-        event = CharacterHealedEvent()
+        event = CharacterHealed()
         self.assertFalse(event.matches(before, after))
 
     def test_when_character_removed_then_dont_match(self):
         before = create_game_state(characters=[self._create_character("c1", 1)])
         after = create_game_state(characters=[])
-        event = CharacterHealedEvent()
+        event = CharacterHealed()
         self.assertFalse(event.matches(before, after))
 
 

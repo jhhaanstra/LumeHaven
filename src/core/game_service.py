@@ -5,36 +5,26 @@ import logging
 
 from apscheduler.schedulers.base import STATE_RUNNING
 
-from src.core.events import (
-    FireElementActive,
-    IceElementActive,
-    AirElementActive,
-    EarthElementActive,
-    LightElementActive,
-    DarkElementActive,
-    LootFound,
-    MonsterDied,
-    MonsterSpawned,
-    CharacterDied,
-    CharacterHealedEvent,
-    CharacterReceivedDamage,
-    CharacterGainedExperience,
-    MonsterReceivedDamage,
-    Event,
+from src.core.event_conditions import (
+    Condition,
+    CONDITIONS_MAP,
 )
+from src.core.events import Event, PulseEvent
 from src.ghs.client import GameStateFetcher
 from src.core.config import Config
 from src.ghs.model import GameState
+from src.lights.lamps import RGB, Lamp
 
 
 class GameService:
-
     def __init__(self, event_publisher: EventPublisher, interval_ms: int):
         self._game_state_fetcher = None
         self._current_state: GameState = None
         self._event_publisher = event_publisher
         self._scheduler = BackgroundScheduler()
-        self._scheduler.add_job(self._event_publisher.publish_events, "interval", seconds=interval_ms / 1000)
+        self._scheduler.add_job(
+            self._event_publisher.publish_events, "interval", seconds=interval_ms / 1000
+        )
 
     def start(self):
         self._scheduler.start()
@@ -47,7 +37,6 @@ class GameService:
 
 
 class EventPublisher(ABC):
-
     _subscribers: list[EventSubScriber] = []
     _queued_events: list[Event] = []
 
@@ -70,44 +59,40 @@ class EventPublisher(ABC):
     def queue_event(self, event: Event):
         self._queued_events.append(event)
 
-class EventSubScriber(ABC):
 
+class EventSubScriber(ABC):
     @abstractmethod
     def on_event(self, event: Event):
         pass
 
 
 class DbReadingEventPublisher(EventPublisher):
-    events = [
-        FireElementActive(),
-        IceElementActive(),
-        AirElementActive(),
-        EarthElementActive(),
-        LightElementActive(),
-        DarkElementActive(),
-        LootFound(),
-        MonsterDied(),
-        MonsterSpawned(),
-        CharacterDied(),
-        CharacterHealedEvent(),
-        CharacterReceivedDamage(),
-        CharacterGainedExperience(),
-        MonsterReceivedDamage(),
-    ]
-
     @staticmethod
     def from_config(config: Config) -> EventPublisher:
-        return DbReadingEventPublisher(config.ghs.sqlite_db, config.ghs.game_code)
+        events: dict[Condition, Event] = {}
 
-    def __init__(self, sqlite_db: str, game_code: str):
-        self._game_state_fetcher = None
+        for effect in config.effects:
+            if effect.effect == "pulse":
+                events[CONDITIONS_MAP[effect.event]] = PulseEvent(
+                    RGB(r=effect.rgb[0], g=effect.rgb[1], b=effect.rgb[2])
+                )
+
+        return DbReadingEventPublisher(
+            config.ghs.sqlite_db, config.ghs.game_code, events
+        )
+
+    def __init__(self, sqlite_db: str, game_code: str, events: dict[Condition, Event]):
+        self._game_state_fetcher: GameStateFetcher = None
         self._current_state: GameState = None
-        self._sqlite_db = sqlite_db
-        self._game_code = game_code
+        self._sqlite_db: str = sqlite_db
+        self._game_code: str = game_code
+        self._events: dict[Condition, Event] = events
 
     def _check_events(self) -> list[Event]:
         if not self._game_state_fetcher:
-            self._game_state_fetcher = GameStateFetcher(self._sqlite_db, self._game_code)
+            self._game_state_fetcher = GameStateFetcher(
+                self._sqlite_db, self._game_code
+            )
             self._current_state = self._game_state_fetcher.fetch_game_state()
             return []
         else:
@@ -118,5 +103,8 @@ class DbReadingEventPublisher(EventPublisher):
             return matching_events
 
     def _check_for_events(self, old_game_state: GameState, new_game_state: GameState):
-        return [event for event in self.events if event.matches(old_game_state, new_game_state)]
-
+        return [
+            event_handler
+            for event, event_handler in self._events.items()
+            if event.matches(old_game_state, new_game_state)
+        ]

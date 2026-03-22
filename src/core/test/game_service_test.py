@@ -1,12 +1,18 @@
 import unittest
 
-from src.core.events import Event, FireElementActive, IceElementActive
-from src.core.game_service import GameService, EventPublisher, EventSubScriber
+from src.core.event_conditions import Condition
+from src.core.game_service import (
+    GameService,
+    EventPublisher,
+    EventSubScriber,
+    PulseEvent,
+)
+from src.lights.lamps import RGB
 
 
 class NoOpEventPublisher(EventPublisher):
 
-    def _check_events(self) -> list[Event]:
+    def _check_events(self) -> list[Condition]:
         pass
 
 
@@ -27,7 +33,7 @@ class TestEventPublisher(unittest.TestCase):
         publisher = StaticEventPublisher()
         subscriber = StaticEventSubscriber()
         publisher.subscribe(subscriber)
-        event = FireElementActive()
+        event = PulseEvent(RGB(r=10, g=20, b=30))
         publisher.events_to_publish.append(event)
         publisher.publish_events()
         self.assertEqual(subscriber.received_events, [event])
@@ -36,7 +42,7 @@ class TestEventPublisher(unittest.TestCase):
         publisher = StaticEventPublisher()
         subscriber = StaticEventSubscriber()
         publisher.subscribe(subscriber)
-        event = IceElementActive()
+        event = PulseEvent(RGB(r=10, g=20, b=30))
         publisher.queue_event(event)
         publisher.publish_events()
         self.assertEqual(subscriber.received_events, [event])
