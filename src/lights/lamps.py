@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from pydantic import BaseModel
 
+from pydantic import BaseModel
 from yeelight import Bulb, Flow, RGBTransition
 
 

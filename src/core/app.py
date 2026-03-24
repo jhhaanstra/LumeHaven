@@ -3,6 +3,7 @@ from logging import StreamHandler
 from flask import Flask, jsonify, request
 import logging
 
+from src.core.events import SceneEvent
 from src.core.lamp_service import LampService
 from src.lights.lamps import Lamps, RGB
 from src.core.game_service import GameService, DbReadingEventPublisher
@@ -57,6 +58,22 @@ def set_brightness(entity_id: str):
     lamps.get_lamp(entity_id).set_brightness(brightness)
     return "ok", 200
 
+
+@app.route("/scenes")
+def get_scenes():
+    return jsonify(list(lamp_service.scenes.keys()))
+
+
+@app.route("/scenes/<scene>", methods=["POST"])
+def set_scene(scene: str):
+    if not game_service.is_started():
+        return "Game not started yet", 503
+
+    if scene not in lamp_service.scenes:
+        return f"No scene named: {scene}", 404
+
+    event_publisher.queue_event(SceneEvent(lamp_service.scenes.get(scene)))
+    return "ok", 200
 
 @app.route("/start")
 def start():

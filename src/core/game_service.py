@@ -13,7 +13,7 @@ from src.core.events import Event, PulseEvent
 from src.ghs.client import GameStateFetcher
 from src.core.config import Config
 from src.ghs.model import GameState
-from src.lights.lamps import RGB, Lamp
+from src.lights.lamps import RGB
 
 
 class GameService:
