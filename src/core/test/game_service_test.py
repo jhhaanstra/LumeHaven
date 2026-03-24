@@ -1,6 +1,7 @@
 import unittest
 
 from src.core.event_conditions import Condition
+from src.core.events import Event
 from src.core.game_service import (
     GameService,
     EventPublisher,

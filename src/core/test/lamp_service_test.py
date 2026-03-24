@@ -2,7 +2,8 @@ import unittest
 
 from src.core.game_service import PulseEvent
 from src.core.lamp_service import LampService
-from src.lights.lamps import Lamp, RGB
+from src.core.test.utils import TestLamp
+from src.lights.lamps import RGB
 
 
 class LampServiceTest(unittest.TestCase):
@@ -30,24 +31,3 @@ class LampServiceTest(unittest.TestCase):
 
         self.assertEqual(lamp1.current_cycle, main_scene)
         self.assertEqual(lamp2.current_cycle, main_scene)
-
-
-class TestLamp(Lamp):
-
-    def __init__(self):
-        self.rgb: RGB = RGB(r=0, g=0, b=0)
-        self.brightness: int = 0
-        self.pulses: list[RGB] = []
-        self.current_cycle: list[RGB] = []
-
-    def turn_color(self, rgb: RGB):
-        self.rgb = rgb
-
-    def set_brightness(self, brightness: int):
-        self.brightness = brightness
-
-    def pulse(self, rgb: RGB):
-        self.pulses.append(rgb)
-
-    def cycle(self, rgb_flow: list[RGB]):
-        self.current_cycle = rgb_flow

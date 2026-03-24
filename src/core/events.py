@@ -1,4 +1,6 @@
 from abc import ABC
+from itertools import permutations
+from random import shuffle
 
 from src.lights.lamps import Lamp, RGB
 
@@ -24,5 +26,8 @@ class SceneEvent(Event):
         self._scene = scene
 
     def handle(self, lamps: list[Lamp]):
-        for lamp in lamps:
-            lamp.cycle(self._scene)
+        scenes = list(permutations(self._scene))
+        shuffle(scenes)
+
+        for e in enumerate(lamps):
+            e[1].cycle(list(scenes[e[0] % len(scenes)]))
