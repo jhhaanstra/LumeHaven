@@ -10,7 +10,7 @@ class LampService(EventSubScriber):
         scenes = {}
         for scene in config.scenes:
             colors = list(
-                map(lambda rgb: RGB(r=rgb[0], b=rgb[1], g=rgb[2]), scene.colors)
+                map(lambda rgb: RGB(r=rgb[0], g=rgb[1], b=rgb[2]), scene.colors)
             )
             scenes[scene.name] = colors
 

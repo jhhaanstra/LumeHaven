@@ -62,7 +62,7 @@ class YeeLightLamp(Lamp):
     def cycle(self, rgb_flow: list[RGB]):
         flow = Flow(
             count=0,
-            transitions= list(map(lambda rgb : RGBTransition(rgb.r, rgb.g, rgb.b, duration=5000), rgb_flow))
+            transitions= list(map(lambda rgb : RGBTransition(rgb.r, rgb.g, rgb.b, duration=3000), rgb_flow))
         )
         self.bulb.start_flow(flow)
 
