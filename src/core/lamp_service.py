@@ -4,9 +4,10 @@ from src.core.game_service import EventSubScriber
 from src.lights.lamps import Lamp, RGB
 
 
-class LampService(EventSubScriber):
+class LampEventHandler(EventSubScriber):
+
     @staticmethod
-    def from_config(config: Config) -> LampService:
+    def from_config(config: Config) -> LampEventHandler:
         scenes = {}
         for scene in config.scenes:
             colors = list(
@@ -14,7 +15,7 @@ class LampService(EventSubScriber):
             )
             scenes[scene.name] = colors
 
-        return LampService(
+        return LampEventHandler(
             lamps=config.get_lamps(),
             scenes=scenes,
             main_scene=scenes[config.main_scene],

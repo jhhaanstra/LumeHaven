@@ -1,11 +1,12 @@
 from logging import StreamHandler
 
-from flask import Flask, jsonify, request
+from flask import Flask
 import logging
 
-from src.core.events import SceneEvent
-from src.core.lamp_service import LampService
-from src.lights.lamps import Lamps, RGB
+from src.core.api.lamps_api import create_lamps_api
+from src.core.api.scenes_api import create_scenes_api
+from src.core.api.status_api import create_game_api
+from src.core.lamp_service import LampEventHandler
 from src.core.game_service import GameService, DbReadingEventPublisher
 from src.core.config import Config
 
@@ -15,73 +16,24 @@ logging.basicConfig(
     handlers=[logging.FileHandler("app.log"), StreamHandler()],
 )
 
-config = Config.from_file("config.yml")
-lamps = Lamps(config.get_lamps())
-event_publisher = DbReadingEventPublisher.from_config(config)
-lamp_service = LampService.from_config(config)
-event_publisher.subscribe(lamp_service)
-game_service = GameService(event_publisher, config.ghs.interval_ms)
-if config.start_on_boot:
-    logging.info("start_on_boot set to true, immediately starting game loop")
-    game_service.start()
+def create_app(config: Config):
+    lamp_event_handler = LampEventHandler.from_config(config)
+    event_publisher = DbReadingEventPublisher.from_config(config)
+    event_publisher.subscribe(lamp_event_handler)
 
-app = Flask(__name__, instance_relative_config=True)
+    game_service = GameService(event_publisher, config.ghs.interval_ms)
+    if config.start_on_boot:
+        logging.info("start_on_boot set to true, immediately starting game loop")
+        game_service.start()
 
-@app.route("/status")
-def status():
-    return "running"
-
-
-@app.route("/lamps")
-def get_lamps():
-    return jsonify([lamp.model_dump() for lamp in config.lamp_configs])
+    app = Flask(__name__, instance_relative_config=True)
+    app.register_blueprint(create_game_api(game_service))
+    app.register_blueprint(create_lamps_api(config))
+    app.register_blueprint(create_scenes_api(config, event_publisher))
+    return app
 
 
-@app.route("/lamps/<entity_id>")
-def get_lamp(entity_id: str):
-    for lamp in config.lamp_configs:
-        if lamp.id == entity_id:
-            return jsonify(lamp.model_dump())
-    raise ValueError("No lamp for given entity id: " + entity_id)
-
-
-@app.route("/lamps/<entity_id>/color", methods=["POST"])
-def set_lamp_color(entity_id: str):
-    rgb = RGB.model_validate(request.json)
-    lamps.get_lamp(entity_id).turn_color(rgb)
-    return "ok", 200
-
-
-@app.route("/lamps/<entity_id>/brightness", methods=["POST"])
-def set_brightness(entity_id: str):
-    brightness = int(request.data)
-    lamps.get_lamp(entity_id).set_brightness(brightness)
-    return "ok", 200
-
-
-@app.route("/scenes")
-def get_scenes():
-    return jsonify(list(lamp_service.scenes.keys()))
-
-
-@app.route("/scenes/<scene>", methods=["POST"])
-def set_scene(scene: str):
-    if not game_service.is_started():
-        return "Game not started yet", 503
-
-    if scene not in lamp_service.scenes:
-        return f"No scene named: {scene}", 404
-
-    event_publisher.queue_event(SceneEvent(lamp_service.scenes.get(scene)))
-    return "ok", 200
-
-@app.route("/start")
-def start():
-    game_service.start()
-    return "ok", 200
-
-
-@app.route("/stop")
-def stop():
-    game_service.stop()
-    return "ok", 200
+if __name__ == "__main__":
+    config = Config.from_file("config.yml")
+    app = create_app(config)
+    app.run()

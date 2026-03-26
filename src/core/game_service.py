@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
 
-from apscheduler.schedulers.base import STATE_RUNNING
+from apscheduler.schedulers.base import STATE_RUNNING, STATE_PAUSED
 
 from src.core.event_conditions import (
     Condition,
@@ -27,7 +27,10 @@ class GameService:
         )
 
     def start(self):
-        self._scheduler.start()
+        if self._scheduler.state == STATE_PAUSED:
+            self._scheduler.resume()
+        else:
+            self._scheduler.start()
 
     def stop(self):
         self._scheduler.pause()

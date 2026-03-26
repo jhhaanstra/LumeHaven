@@ -1,7 +1,7 @@
 import unittest
 
 from src.core.game_service import PulseEvent
-from src.core.lamp_service import LampService
+from src.core.lamp_service import LampEventHandler
 from src.core.test.utils import TestLamp
 from src.lights.lamps import RGB
 
@@ -12,7 +12,7 @@ class LampServiceTest(unittest.TestCase):
         lamp1 = TestLamp()
         lamp2 = TestLamp()
 
-        lamp_service = LampService(
+        lamp_service = LampEventHandler(
             [lamp1, lamp2],
             {},
             [RGB(r=1, g=2, b=3)]
@@ -27,7 +27,7 @@ class LampServiceTest(unittest.TestCase):
         lamp2 = TestLamp()
 
         main_scene = [RGB(r=100, g=50, b=100), RGB(r=50, g=100, b=50)]
-        LampService([lamp1, lamp2], {}, main_scene)
+        LampEventHandler([lamp1, lamp2], {}, main_scene)
 
         self.assertEqual(lamp1.current_cycle, main_scene)
         self.assertEqual(lamp2.current_cycle, main_scene)
