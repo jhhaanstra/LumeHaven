@@ -5,7 +5,6 @@ from src.lights.lamps import Lamp, RGB
 
 
 class LampEventHandler(EventSubScriber):
-
     @staticmethod
     def from_config(config: Config) -> LampEventHandler:
         scenes = {}

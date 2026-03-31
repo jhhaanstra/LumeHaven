@@ -2,6 +2,7 @@ from abc import ABC
 from enum import Enum
 from typing import List, Dict
 
+
 class GameState:
     def __init__(
         self,
@@ -25,10 +26,12 @@ class GameState:
 
     def __eq__(self, other):
         if isinstance(other, GameState):
-            return (self.scenario == other.scenario and
-                    self.characters == other.characters and
-                    self.monsters == other.monsters and
-                    self.elements == other.elements)
+            return (
+                self.scenario == other.scenario
+                and self.characters == other.characters
+                and self.monsters == other.monsters
+                and self.elements == other.elements
+            )
         return False
 
 
@@ -51,9 +54,11 @@ class Entity(ABC):
 
     def __eq__(self, other):
         if isinstance(other, Entity):
-            return (self.entity_id == other.entity_id and
-                    self.health == other.health and
-                    self.conditions == other.conditions)
+            return (
+                self.entity_id == other.entity_id
+                and self.health == other.health
+                and self.conditions == other.conditions
+            )
         return False
 
 
@@ -82,10 +87,12 @@ class Character(Entity):
         if not isinstance(other, Character):
             return False
 
-        return (super().__eq__(other) and
-                self.exhausted == other.exhausted and
-                self.experience == other.experience and
-                self.loot == other.loot)
+        return (
+            super().__eq__(other)
+            and self.exhausted == other.exhausted
+            and self.experience == other.experience
+            and self.loot == other.loot
+        )
 
 
 class Monster(Entity):
@@ -107,6 +114,7 @@ class Monster(Entity):
             return False
         return super().__eq__(other) and self.type == other.type
 
+
 class Condition:
     def __init__(self, name: str):
         self.name = name
@@ -119,6 +127,7 @@ class Condition:
             return self.name == other.name
         return False
 
+
 class Health:
     def __init__(self, max: int, current: int):
         self.max = max
@@ -129,9 +138,9 @@ class Health:
 
     def __eq__(self, other, /):
         if isinstance(other, Health):
-            return (self.max == other.max and
-                    self.current == other.current)
+            return self.max == other.max and self.current == other.current
         return False
+
 
 class Element(Enum):
     FIRE = 1

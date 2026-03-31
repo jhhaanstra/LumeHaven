@@ -81,14 +81,14 @@ GAME_STATE = GameState(
         Element.ICE: 2,
         Element.EARTH: 1,
         Element.LIGHT: 1,
-        Element.AIR : 0,
-        Element.DARK : 0,
-        Element.FIRE : 0,
+        Element.AIR: 0,
+        Element.DARK: 0,
+        Element.FIRE: 0,
     },
 )
 
-class TestReadModel(unittest.TestCase):
 
+class TestReadModel(unittest.TestCase):
     def setUp(self):
         self.actual = self.read_state()
 

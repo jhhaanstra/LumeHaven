@@ -1,6 +1,7 @@
 from typing import Literal, List
 
-import yaml, logging
+import yaml
+import logging
 
 from pydantic import BaseModel, HttpUrl, ValidationError, Field
 

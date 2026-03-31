@@ -3,7 +3,6 @@ from src.lights.lamps import RGB
 
 
 class Scenes:
-
     @staticmethod
     def from_config(config: Config):
         scenes = {}

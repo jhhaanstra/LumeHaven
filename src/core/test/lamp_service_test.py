@@ -7,16 +7,11 @@ from src.lights.lamps import RGB
 
 
 class LampServiceTest(unittest.TestCase):
-
     def test_given_event_when_pulse_then_pulse_all_lamps(self):
         lamp1 = TestLamp()
         lamp2 = TestLamp()
 
-        lamp_service = LampEventHandler(
-            [lamp1, lamp2],
-            {},
-            [RGB(r=1, g=2, b=3)]
-        )
+        lamp_service = LampEventHandler([lamp1, lamp2], {}, [RGB(r=1, g=2, b=3)])
 
         lamp_service.on_event(PulseEvent(RGB(r=100, g=50, b=100)))
         self.assertEqual(lamp1.pulses, [RGB(r=100, g=50, b=100)])

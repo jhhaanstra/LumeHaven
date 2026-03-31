@@ -2,7 +2,6 @@ from src.lights.lamps import Lamp, RGB
 
 
 class TestLamp(Lamp):
-
     def __init__(self):
         self.rgb = RGB(r=0, g=0, b=0)
         self.brightness = 0

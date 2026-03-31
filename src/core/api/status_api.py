@@ -8,7 +8,7 @@ def create_game_api(game_service: GameService):
 
     @game_service_api.route("/status")
     def status():
-        return jsonify({ "started" : game_service.is_started()})
+        return jsonify({"started": game_service.is_started()})
 
     @game_service_api.route("/start")
     def start():

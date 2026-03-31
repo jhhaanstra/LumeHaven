@@ -26,7 +26,6 @@ from src.ghs.model import Element, GameState, Character, Health, Monster
 
 
 class TestElementActive(unittest.TestCase):
-
     element_events = {
         Element.FIRE: FireElementActive(),
         Element.ICE: IceElementActive(),
@@ -64,7 +63,6 @@ class TestElementActive(unittest.TestCase):
 
 
 class TestElementInactive(unittest.TestCase):
-
     element_events = {
         Element.FIRE: FireElementFades(),
         Element.ICE: IceElementFades(),
@@ -117,7 +115,6 @@ class TestElementInactive(unittest.TestCase):
 
 
 class TestLootFound(unittest.TestCase):
-
     def test_loot_found(self):
         before = create_game_state(characters=[self._create_character("c1", 0)])
         after = create_game_state(characters=[self._create_character("c1", 1)])
@@ -174,7 +171,6 @@ class TestLootFound(unittest.TestCase):
 
 
 class TestMonsterDied(unittest.TestCase):
-
     def test_when_monster_died_then_matches(self):
         before = create_game_state(monsters=[self._create_monster("m1")])
         after = create_game_state()
@@ -205,7 +201,6 @@ class TestMonsterDied(unittest.TestCase):
 
 
 class TestMonsterSpawned(unittest.TestCase):
-
     def test_when_monster_spawned_then_matches(self):
         before = create_game_state()
         after = create_game_state(monsters=[self._create_monster("m1")])
@@ -236,7 +231,6 @@ class TestMonsterSpawned(unittest.TestCase):
 
 
 class TestMonsterReceivedDamage(unittest.TestCase):
-
     def test_when_monster_receives_damage_then_match(self):
         before = create_game_state(monsters=[self._create_monster("c1", 10)])
         after = create_game_state(monsters=[self._create_monster("c1", 1)])
@@ -266,9 +260,7 @@ class TestMonsterReceivedDamage(unittest.TestCase):
         return Monster(entity_id, Health(10, health), [], "Ooze")
 
 
-
 class TestCharacterDied(unittest.TestCase):
-
     def test_when_new_character_exhausted_then_match(self):
         before = create_game_state(characters=[self._create_character(False)])
         after = create_game_state(characters=[self._create_character(True)])
@@ -287,14 +279,12 @@ class TestCharacterDied(unittest.TestCase):
         event = CharacterDied()
         self.assertFalse(event.matches(before, after))
 
-
     @staticmethod
     def _create_character(exhausted: bool) -> Character:
         return Character("c", Health(10, 10), [], exhausted, 0, 0)
 
 
 class TestCharacterHealed(unittest.TestCase):
-
     def test_when_character_healed_then_match(self):
         before = create_game_state(characters=[self._create_character("c1", 1)])
         after = create_game_state(characters=[self._create_character("c1", 10)])
@@ -319,14 +309,12 @@ class TestCharacterHealed(unittest.TestCase):
         event = CharacterHealed()
         self.assertFalse(event.matches(before, after))
 
-
     @staticmethod
     def _create_character(entity_id: str, hp: int) -> Character:
         return Character(entity_id, Health(10, hp), [], False, 0, 0)
 
 
 class TestCharacterGainedExperience(unittest.TestCase):
-
     def test_when_character_gains_experience_then_match(self):
         before = create_game_state(characters=[self._create_character("c1", 1)])
         after = create_game_state(characters=[self._create_character("c1", 10)])
@@ -357,7 +345,6 @@ class TestCharacterGainedExperience(unittest.TestCase):
 
 
 class TestCharacterReceivedDamage(unittest.TestCase):
-
     def test_when_character_receives_damage_then_match(self):
         before = create_game_state(characters=[self._create_character("c1", 10)])
         after = create_game_state(characters=[self._create_character("c1", 1)])
@@ -387,10 +374,10 @@ class TestCharacterReceivedDamage(unittest.TestCase):
         return Character(entity_id, Health(10, health), [], False, 0, 0)
 
 
-def create_game_state(scenario= 1, characters=None, monsters=None) -> GameState:
+def create_game_state(scenario=1, characters=None, monsters=None) -> GameState:
     if monsters is None:
         monsters = []
     if characters is None:
         characters = []
 
-    return GameState(scenario, characters, monsters, { e : 0 for e in Element })
+    return GameState(scenario, characters, monsters, {e: 0 for e in Element})

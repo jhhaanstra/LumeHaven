@@ -85,10 +85,11 @@ EXPECTED_GAME_STATE = GameState(
 
 
 class TestGameStateFetcher(unittest.TestCase):
-
     def setUp(self):
         resource_path = Path(__file__).parent / "resources" / "test_ghs.sqlite"
-        fetcher = GameStateFetcher(str(resource_path), "74986287-7208-4719-aba3-5fe464f7f713")
+        fetcher = GameStateFetcher(
+            str(resource_path), "74986287-7208-4719-aba3-5fe464f7f713"
+        )
         self.actual = fetcher.fetch_game_state()
 
     def test_characters(self):

@@ -12,7 +12,6 @@ class Event(ABC):
 
 
 class PulseEvent(Event):
-
     def __init__(self, rgb: RGB):
         self._rgb = rgb
 
@@ -20,8 +19,8 @@ class PulseEvent(Event):
         for lamp in lamps:
             lamp.pulse(self._rgb)
 
-class SceneEvent(Event):
 
+class SceneEvent(Event):
     def __init__(self, scene: list[RGB]):
         self._scene = scene
 

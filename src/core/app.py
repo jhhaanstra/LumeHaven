@@ -16,6 +16,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("app.log"), StreamHandler()],
 )
 
+
 def create_app(config: Config):
     lamp_event_handler = LampEventHandler.from_config(config)
     event_publisher = DbReadingEventPublisher.from_config(config)

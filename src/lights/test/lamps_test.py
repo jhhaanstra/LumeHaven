@@ -5,9 +5,10 @@ import pytest
 from src.lights.lamps import YeeLightLamp, RGB
 
 
-@pytest.mark.skip(reason="Only manually test with real lamps, replace the ip address first")
+@pytest.mark.skip(
+    reason="Only manually test with real lamps, replace the ip address first"
+)
 class TestYeelightLamp(unittest.TestCase):
-
     lamp = YeeLightLamp("test_lamp", "1.2.3.4")
 
     def test_turn_color(self):

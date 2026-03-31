@@ -12,13 +12,11 @@ from src.lights.lamps import RGB
 
 
 class NoOpEventPublisher(EventPublisher):
-
     def _check_events(self) -> list[Condition]:
         pass
 
 
 class TestGameService(unittest.TestCase):
-
     def test_start_and_stop(self):
         game_service = GameService(NoOpEventPublisher(), 100)
         self.assertFalse(game_service.is_started())
@@ -29,7 +27,6 @@ class TestGameService(unittest.TestCase):
 
 
 class TestEventPublisher(unittest.TestCase):
-
     def test_should_publish_to_subscribers(self):
         publisher = StaticEventPublisher()
         subscriber = StaticEventSubscriber()
@@ -50,7 +47,6 @@ class TestEventPublisher(unittest.TestCase):
 
 
 class StaticEventPublisher(EventPublisher):
-
     def __init__(self):
         self.events_to_publish = []
 
@@ -59,8 +55,8 @@ class StaticEventPublisher(EventPublisher):
         self.events_to_publish.clear()
         return events_copy
 
-class StaticEventSubscriber(EventSubScriber):
 
+class StaticEventSubscriber(EventSubScriber):
     def __init__(self):
         self.received_events = []
 

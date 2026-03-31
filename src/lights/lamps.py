@@ -14,7 +14,6 @@ class RGB(BaseModel):
 
 
 class Lamp(ABC):
-
     @abstractmethod
     def turn_color(self, rgb: RGB):
         pass
@@ -37,6 +36,7 @@ class YeeLightLamp(Lamp):
     Works with the YeeLight integration for Home Assistant: https://www.home-assistant.io/integrations/yeelight/
     More info about the YeeLight spec can be found here: https://yeelight.readthedocs.io/en/stable/index.html
     """
+
     def __init__(self, entity_id: str, ip: str):
         self.bulb = Bulb(ip)
         self.entity_id = entity_id
@@ -53,16 +53,18 @@ class YeeLightLamp(Lamp):
             RGBTransition(rgb.r, rgb.g, rgb.b, duration=300),
         ]
 
-        flow = Flow(
-            count=2,
-            transitions=transitions
-        )
+        flow = Flow(count=2, transitions=transitions)
         self.bulb.start_flow(flow)
 
     def cycle(self, rgb_flow: list[RGB]):
         flow = Flow(
             count=0,
-            transitions= list(map(lambda rgb : RGBTransition(rgb.r, rgb.g, rgb.b, duration=3000), rgb_flow))
+            transitions=list(
+                map(
+                    lambda rgb: RGBTransition(rgb.r, rgb.g, rgb.b, duration=3000),
+                    rgb_flow,
+                )
+            ),
         )
         self.bulb.start_flow(flow)
 
@@ -76,9 +78,10 @@ class YeeLightLamp(Lamp):
 
 
 class Lamps:
-
     def __init__(self, lamps: list[Lamp]):
-        self.lamps = { lamp.entity_id: lamp for lamp in lamps if isinstance(lamp, YeeLightLamp) }
+        self.lamps = {
+            lamp.entity_id: lamp for lamp in lamps if isinstance(lamp, YeeLightLamp)
+        }
 
     def all_lamps(self):
         return self.lamps.values()
