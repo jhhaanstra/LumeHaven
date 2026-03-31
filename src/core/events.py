@@ -2,12 +2,12 @@ from abc import ABC
 from itertools import permutations
 from random import shuffle
 
-from src.lights.lamps import Lamp, RGB
+from src.lights.lamps import RGB, Lamp
 
 
 class Event(ABC):
     @staticmethod
-    def handle(self, lamps: list[Lamp]):
+    def handle(lamps: list[Lamp]):
         pass
 
 

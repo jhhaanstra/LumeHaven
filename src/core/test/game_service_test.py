@@ -3,17 +3,17 @@ import unittest
 from src.core.event_conditions import Condition
 from src.core.events import Event
 from src.core.game_service import (
-    GameService,
     EventPublisher,
     EventSubScriber,
+    GameService,
     PulseEvent,
 )
 from src.lights.lamps import RGB
 
 
 class NoOpEventPublisher(EventPublisher):
-    def _check_events(self) -> list[Condition]:
-        pass
+    def _check_events(self) -> list[Event]:
+        return []
 
 
 class TestGameService(unittest.TestCase):

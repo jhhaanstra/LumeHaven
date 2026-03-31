@@ -1,7 +1,7 @@
 from src.core.config import Config
 from src.core.events import Event
 from src.core.game_service import EventSubScriber
-from src.lights.lamps import Lamp, RGB
+from src.lights.lamps import RGB, Lamp
 
 
 class LampEventHandler(EventSubScriber):

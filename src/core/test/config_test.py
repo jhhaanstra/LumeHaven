@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import HttpUrl, ValidationError
 
-from src.core.config import Config, GHS, LampConfig, EventEffect, Scene
+from src.core.config import GHS, Config, EventEffect, LampConfig, Scene
 from src.lights.lamps import YeeLightLamp
 
 
@@ -69,7 +69,9 @@ class TestConfig(unittest.TestCase):
     def test_invalid_effect_provided(self):
         with self.assertRaises(ValueError):
             EventEffect(
-                event="fire_element_active", effect="invalid-effect", rgb=(255, 0, 0)
+                event="fire_element_active",
+                effect="invalid-effect",  # ty:ignore[invalid-argument-type]
+                rgb=(255, 0, 0),
             )
 
     def test_invalid_lamp_input(self):

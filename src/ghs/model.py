@@ -1,9 +1,13 @@
 from abc import ABC
 from enum import Enum
-from typing import List, Dict
+from typing import Dict, List
 
 
 class GameState:
+    @staticmethod
+    def empty() -> GameState:
+        return GameState(scenario=0, characters=[], monsters=[], elements={})
+
     def __init__(
         self,
         scenario: int,
@@ -40,7 +44,7 @@ class Entity(ABC):
         self,
         entity_id: str,
         health: "Health",
-        conditions: List["Condition"] = None,
+        conditions: List["Condition"] = [],
     ):
         self.entity_id = entity_id
         self.health = health
@@ -67,7 +71,7 @@ class Character(Entity):
         self,
         entity_id: str,
         health: "Health",
-        conditions: List["Condition"] = None,
+        conditions: List["Condition"] = [],
         exhausted: bool = False,
         experience: int = 0,
         loot: int = 0,
@@ -83,7 +87,7 @@ class Character(Entity):
             f"exhausted={self.exhausted}, experience={self.experience}, loot={self.loot})"
         )
 
-    def __eq__(self, other, /):
+    def __eq__(self, other):
         if not isinstance(other, Character):
             return False
 
@@ -100,7 +104,7 @@ class Monster(Entity):
         self,
         entity_id: str,
         health: "Health",
-        conditions: List["Condition"] = None,
+        conditions: List["Condition"] = [],
         monster_type: str = "Unknown",
     ):
         super().__init__(entity_id, health, conditions)

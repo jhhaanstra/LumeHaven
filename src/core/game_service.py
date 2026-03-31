@@ -1,17 +1,16 @@
+import logging
 from abc import ABC, abstractmethod
 
 from apscheduler.schedulers.background import BackgroundScheduler
-import logging
+from apscheduler.schedulers.base import STATE_PAUSED, STATE_RUNNING
 
-from apscheduler.schedulers.base import STATE_RUNNING, STATE_PAUSED
-
+from src.core.config import Config
 from src.core.event_conditions import (
-    Condition,
     CONDITIONS_MAP,
+    Condition,
 )
 from src.core.events import Event, PulseEvent
 from src.ghs.client import GameStateFetcher
-from src.core.config import Config
 from src.ghs.model import GameState
 from src.lights.lamps import RGB
 
@@ -19,7 +18,7 @@ from src.lights.lamps import RGB
 class GameService:
     def __init__(self, event_publisher: EventPublisher, interval_ms: int):
         self._game_state_fetcher = None
-        self._current_state: GameState = None
+        self._current_state: GameState = GameState.empty()
         self._event_publisher = event_publisher
         self._scheduler = BackgroundScheduler()
         self._scheduler.add_job(
@@ -85,8 +84,7 @@ class DbReadingEventPublisher(EventPublisher):
         )
 
     def __init__(self, sqlite_db: str, game_code: str, events: dict[Condition, Event]):
-        self._game_state_fetcher: GameStateFetcher = None
-        self._current_state: GameState = None
+        self._current_state: GameState = GameState.empty()
         self._sqlite_db: str = sqlite_db
         self._game_code: str = game_code
         self._events: dict[Condition, Event] = events

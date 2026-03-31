@@ -5,9 +5,9 @@ from src.lights.lamps import RGB
 class Scenes:
     @staticmethod
     def from_config(config: Config):
-        scenes = {}
+        scenes: dict[str, list[RGB]] = {}
         for scene in config.scenes:
-            colors = list(
+            colors: list = list(
                 map(lambda rgb: RGB(r=rgb[0], g=rgb[1], b=rgb[2]), scene.colors)
             )
             scenes[scene.name] = colors
@@ -15,10 +15,10 @@ class Scenes:
         return Scenes(scenes)
 
     def __init__(self, scenes: dict[str, list[RGB]]):
-        self.scenes = scenes
+        self.scenes: dict[str, list[RGB]] = scenes
 
     def get_scene(self, name: str) -> list[RGB]:
-        return self.scenes.get(name)
+        return self.scenes.get(name, [])
 
     def get_scene_names(self) -> list[str]:
         return list(self.scenes.keys())
