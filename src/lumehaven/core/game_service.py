@@ -17,7 +17,6 @@ from lumehaven.lights.lamps import RGB
 
 class GameService:
     def __init__(self, event_publisher: EventPublisher, interval_ms: int):
-        self._game_state_fetcher = None
         self._current_state: GameState = GameState.empty()
         self._event_publisher = event_publisher
         self._scheduler = BackgroundScheduler()
@@ -84,6 +83,7 @@ class DbReadingEventPublisher(EventPublisher):
         )
 
     def __init__(self, sqlite_db: str, game_code: str, events: dict[Condition, Event]):
+        self._game_state_fetcher = None
         self._current_state: GameState = GameState.empty()
         self._sqlite_db: str = sqlite_db
         self._game_code: str = game_code
