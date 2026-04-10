@@ -1,18 +1,19 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Run server",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/src/core/app.py",
-      "cwd": "${workspaceFolder}",
-      "env": {
-        "PYTHONPATH": "${workspaceFolder}"
-      },
-      "console": "integratedTerminal",
-      "justMyCode": true
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: lumehaven",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "lumehaven",
+            "console": "integratedTerminal"
+        }
+    ]
 }
-
