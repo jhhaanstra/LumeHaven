@@ -20,6 +20,7 @@ class GameService:
         self._current_state: GameState = GameState.empty()
         self._event_publisher = event_publisher
         self._scheduler = BackgroundScheduler()
+        logging.getLogger("apscheduler").setLevel(logging.DEBUG)
         self._scheduler.add_job(
             self._event_publisher.publish_events, "interval", seconds=interval_ms / 1000
         )
