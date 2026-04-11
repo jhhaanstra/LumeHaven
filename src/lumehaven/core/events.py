@@ -21,7 +21,8 @@ class PulseEvent(Event):
 
 
 class SceneEvent(Event):
-    def __init__(self, scene: list[RGB]):
+    def __init__(self, scene_name: str, scene: list[RGB]):
+        self.scene_name = scene_name
         self._scene = scene
 
     def handle(self, lamps: list[Lamp]):

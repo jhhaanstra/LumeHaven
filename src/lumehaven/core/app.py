@@ -8,7 +8,7 @@ from lumehaven.core.api.scenes_api import create_scenes_api
 from lumehaven.core.api.status_api import create_game_api
 from lumehaven.core.config import Config
 from lumehaven.core.game_service import DbReadingEventPublisher, GameService
-from lumehaven.core.lamp_service import LampEventHandler
+from lumehaven.core.lamp_service import LampService
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,9 +18,9 @@ logging.basicConfig(
 
 
 def create_app(config: Config):
-    lamp_event_handler = LampEventHandler.from_config(config)
+    lamp_service = LampService.from_config(config)
     event_publisher = DbReadingEventPublisher.from_config(config)
-    event_publisher.subscribe(lamp_event_handler)
+    event_publisher.subscribe(lamp_service)
 
     game_service = GameService(event_publisher, config.ghs.interval_ms)
     if config.start_on_boot:
@@ -30,7 +30,7 @@ def create_app(config: Config):
     app = Flask(__name__, instance_relative_config=True)
     app.register_blueprint(create_game_api(game_service))
     app.register_blueprint(create_lamps_api(config))
-    app.register_blueprint(create_scenes_api(config, event_publisher))
+    app.register_blueprint(create_scenes_api(config, event_publisher, lamp_service))
     return app
 
 
