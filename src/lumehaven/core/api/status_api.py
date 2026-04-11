@@ -10,12 +10,12 @@ def create_game_api(game_service: GameService):
     def status():
         return jsonify({"started": game_service.is_started()})
 
-    @game_service_api.route("/start")
+    @game_service_api.post("/start")
     def start():
         game_service.start()
         return "ok", 200
 
-    @game_service_api.route("/stop")
+    @game_service_api.post("/stop")
     def stop():
         game_service.stop()
         return "ok", 200
