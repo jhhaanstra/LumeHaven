@@ -1,0 +1,85 @@
+ghs:
+  game_code: "74986287-7208-4719-aba3-5fe464f7f713"
+  sqlite_db: "ghs/ghs.sqlite"
+  url: "http://localhost:12345"
+  interval_ms: 1000
+
+start_on_boot: "false"
+
+main_scene: "tavern"
+
+lamps:
+  - type: "yeelight"
+    id: "living-room-lamp"
+    ip: "192.168.0.42"
+
+effects:
+  - event: "fire_element_active"
+    effect: "pulse"
+    rgb: [255, 0, 0]
+  - event: "ice_element_active"
+    effect: "pulse"
+    rgb: [0, 255, 255]
+  - event: "air_element_active"
+    effect: "pulse"
+    rgb: [160, 160, 160]
+  - event: "earth_element_active"
+    effect: "pulse"
+    rgb: [204, 102, 0]
+  - event: "light_element_active"
+    effect: "pulse"
+    rgb: [255, 255, 0]
+  - event: "dark_element_active"
+    effect: "pulse"
+    rgb: [0, 0, 102]
+  - event: "loot_found"
+    effect: "pulse"
+    rgb: [255, 215, 0]
+  - event: "monster_died"
+    effect: "pulse"
+    rgb: [255, 128, 0]
+  - event: "monster_spawned"
+    effect: "pulse"
+    rgb: [255, 0, 0]
+  - event: "monster_received_damage"
+    effect: "pulse"
+    rgb: [255, 51, 51]
+  - event: "character_died"
+    effect: "pulse"
+    rgb: [255, 0, 0]
+  - event: "character_healed_event"
+    effect: "pulse"
+    rgb: [0, 255, 0]
+  - event: "character_gained_experience"
+    effect: "pulse"
+    rgb: [0, 0, 255]
+  - event: "Character_received_damage"
+    effect: "pulse"
+    rgb: [255, 51, 51]
+
+scenes:
+  - name: "tavern"
+    colors:
+      - [255, 140, 0]
+      - [255, 200, 100]
+      - [200, 100, 0]
+  - name: "dungeon"
+    colors:
+      - [0, 0, 100]
+      - [50, 50, 150]
+      - [0, 50, 50]
+  - name: "forest"
+    colors:
+      - [0, 100, 0]
+      - [50, 200, 50]
+      - [0, 50, 0]
+  - name: "frost"
+    colors:
+      - [100, 200, 255]
+      - [150, 255, 255]
+      - [50, 100, 200]
+  - name: "victory"
+    colors:
+      - [255, 215, 0]
+      - [255, 255, 100]
+      - [255, 150, 0]

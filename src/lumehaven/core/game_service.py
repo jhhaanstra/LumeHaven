@@ -104,8 +104,11 @@ class DbReadingEventPublisher(EventPublisher):
             return matching_events
 
     def _check_for_events(self, old_game_state: GameState, new_game_state: GameState):
-        return [
-            event_handler
-            for event, event_handler in self._events.items()
-            if event.matches(old_game_state, new_game_state)
-        ]
+        events: list[Event] = []
+
+        for condition, event_handler in self._events.items():
+            if condition.matches(old_game_state, new_game_state):
+                logging.info(f"Condition triggered: {condition.__class__.__name__}")
+                events.append(event_handler)
+
+        return events
