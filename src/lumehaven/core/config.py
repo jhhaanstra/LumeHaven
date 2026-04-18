@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
-from lumehaven.lights.lamps import Lamp, YeeLightLamp
+from lumehaven.lights.lamps import Lamp
 
 EffectType = Literal["add_to_cycle", "pulse"]
 
@@ -58,13 +58,3 @@ class Config(BaseModel):
             logging.info(yaml.dump(data, sort_keys=False, default_flow_style=False))
 
         return Config.model_validate(data)
-
-    def get_lamps(self) -> list[Lamp]:
-        return list(map(self._get_lamp_from_config, self.lamp_configs))
-
-    @staticmethod
-    def _get_lamp_from_config(lamp_config: LampConfig) -> Lamp:
-        if lamp_config.type == "yeelight":
-            return YeeLightLamp(lamp_config.id, lamp_config.ip)
-
-        raise ValidationError("Illegal lamp type provided: " + lamp_config.type)

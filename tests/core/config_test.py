@@ -1,10 +1,10 @@
 import unittest
 from pathlib import Path
+from typing import Any
 
 from pydantic import HttpUrl, ValidationError
 
 from lumehaven.core.config import GHS, Config, EventEffect, LampConfig, Scene
-from lumehaven.lights.lamps import YeeLightLamp
 
 
 class TestConfig(unittest.TestCase):
@@ -37,15 +37,6 @@ class TestConfig(unittest.TestCase):
         config_dict: dict[str, Any] = self.config.lamp_configs[1].dict()
         self.assertTrue("foo" in config_dict)
         self.assertEqual(config_dict["foo"], "bar")
-
-    def test_get_lamps(self):
-        self.assertEqual(
-            [
-                YeeLightLamp(entity_id="lamp-1", ip="1.2.3.4"),
-                YeeLightLamp(entity_id="lamp-2", ip="4.3.2.1"),
-            ],
-            self.config.get_lamps(),
-        )
 
     def test_get_effects(self):
         self.assertEqual(

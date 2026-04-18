@@ -1,11 +1,13 @@
 from flask import Blueprint, jsonify, request
 
 from lumehaven.core.config import Config
-from lumehaven.lights.lamps import RGB, Lamps
+from lumehaven.core.lamp_service import LampLoader
+from lumehaven.lights.lamps import RGB, Lamp
 
 
 def create_lamps_api(config: Config):
-    lamps = Lamps(config.get_lamps())
+    lamp_loader = LampLoader()
+    lamps: list[Lamp] = lamp_loader.load_lamps(config.lamp_configs)
     lamps_api = Blueprint("lamps", __name__)
 
     @lamps_api.route("/lamps")

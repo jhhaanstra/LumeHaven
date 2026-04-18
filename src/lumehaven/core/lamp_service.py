@@ -39,8 +39,9 @@ class LampService(EventSubScriber):
             )
             scenes[scene.name] = colors
 
+        lamp_loader = LampLoader()
         return LampService(
-            lamps=config.get_lamps(),
+            lamps=lamp_loader.load_lamps(config.lamp_configs),
             initial_scene=scenes[config.main_scene],
         )
 
