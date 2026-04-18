@@ -19,6 +19,10 @@ dependencies = [
 [project.scripts]
 lumehaven = "lumehaven:main"
 
+[project.entry-points."lumehaven.lamp_providers"]
+logging_lamp = "lamp_integrations.logging_lamp:create_logging_lamp"
+yeelight = "lamp_integrations.yeelight:create_yeelight_lamp"
+
 [build-system]
 requires = ["uv_build>=0.10.7,<0.11.6"]
 build-backend = "uv_build"

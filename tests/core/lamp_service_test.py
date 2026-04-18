@@ -1,10 +1,33 @@
 import unittest
 
+from lamp_integrations.logging_lamp import LoggingLamp
+from lamp_integrations.yeelight import YeeLightLamp
+from lumehaven.core.config import LampConfig
 from lumehaven.core.events import SceneEvent
 from lumehaven.core.game_service import PulseEvent
-from lumehaven.core.lamp_service import LampService
+from lumehaven.core.lamp_service import LampLoader, LampService
 from lumehaven.lights.lamps import RGB
 from tests.core.utils import TestLamp
+
+
+class LampLoaderTest(unittest.TestCase):
+    def test_yeelight_entry_point_loading(self):
+        config = LampConfig(type="yeelight", id="foo", ip="1.2.3.4")
+        lamp_loader = LampLoader()
+        lamp = lamp_loader.load_lamp(config)
+        self.assertTrue(lamp, YeeLightLamp)
+
+    def test_logging_entry_point_loading(self):
+        config = LampConfig(type="logging_lamp", id="foo", ip="1.2.3.4")
+        lamp_loader = LampLoader()
+        lamp = lamp_loader.load_lamp(config)
+        self.assertTrue(lamp, LoggingLamp)
+
+    def test_invalid_type(self):
+        config = LampConfig(type="invalid", id="foo", ip="1.2.3.4")
+        lamp_loader = LampLoader()
+        with self.assertRaises(ValueError):
+            lamp_loader.load_lamp(config)
 
 
 class LampServiceTest(unittest.TestCase):

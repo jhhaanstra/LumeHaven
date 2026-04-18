@@ -1,7 +1,32 @@
-from lumehaven.core.config import Config
+import logging
+from importlib.metadata import entry_points
+from typing import Any
+
+from pygments.plugin import iter_entry_points
+
+from lumehaven.core.config import Config, LampConfig
 from lumehaven.core.events import Event, SceneEvent
 from lumehaven.core.game_service import EventSubScriber
 from lumehaven.lights.lamps import RGB, Lamp
+
+
+class LampLoader:
+    def __init__(self):
+        self.factories: dict[str, Any] = dict()
+
+        for ep in iter_entry_points("lumehaven.lamp_providers"):
+            logging.info(f"Found integration type: {ep.name}")
+            self.factories[ep.name] = ep.load()
+
+    def load_lamps(self, configs: list[LampConfig]):
+        return [self.load_lamp(config) for config in configs]
+
+    def load_lamp(self, config: LampConfig) -> Lamp:
+        if config.type not in self.factories:
+            raise ValueError(f"Unknown lamp type: {config.type}")
+
+        factory: Lamp = self.factories[config.type]
+        return factory(config)
 
 
 class LampService(EventSubScriber):

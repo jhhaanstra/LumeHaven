@@ -1,6 +1,16 @@
+from typing import Optional
+
 from yeelight import Bulb, Flow, RGBTransition
 
+from lumehaven.core.config import LampConfig
 from lumehaven.lights.lamps import RGB, Lamp
+
+
+def create_yeelight_lamp(config: LampConfig) -> Optional[Lamp]:
+    if config.type != "yeelight":
+        return None
+
+    return YeeLightLamp(config.id, config.ip)
 
 
 class YeeLightLamp(Lamp):
