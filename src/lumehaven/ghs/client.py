@@ -42,7 +42,7 @@ class GameStateReader:
 
     def _parse_character(self, character: dict) -> Character:
         return Character(
-            entity_id=character["title"],
+            entity_id=character["name"],
             health=Health(
                 max=int(character["maxHealth"]), current=int(character["health"])
             ),
