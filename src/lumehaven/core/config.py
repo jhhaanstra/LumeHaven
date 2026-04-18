@@ -1,8 +1,8 @@
 import logging
-from typing import List, Literal
+from typing import Any, Dict, List, Literal
 
 import yaml
-from pydantic import BaseModel, Field, HttpUrl, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 from lumehaven.lights.lamps import Lamp, YeeLightLamp
 
@@ -21,9 +21,14 @@ class GHS(BaseModel):
 
 
 class LampConfig(BaseModel):
-    type: Literal["yeelight"]
+    model_config = ConfigDict(extra="allow")
+
+    type: str
     id: str
     ip: str
+
+    def dict(self, **kwargs) -> Dict[str, Any]:
+        return super().model_dump(**kwargs)
 
 
 class EventEffect(BaseModel):

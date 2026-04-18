@@ -32,6 +32,12 @@ class TestConfig(unittest.TestCase):
             ],
         )
 
+    def test_lamp_config_extra_fields(self):
+        self.assertFalse("foo" in self.config.lamp_configs[0].dict())
+        config_dict: dict[str, Any] = self.config.lamp_configs[1].dict()
+        self.assertTrue("foo" in config_dict)
+        self.assertEqual(config_dict["foo"], "bar")
+
     def test_get_lamps(self):
         self.assertEqual(
             [
