@@ -15,7 +15,7 @@ GAME_STATE = GameState(
     scenario=70,
     characters=[
         Character(
-            entity_id="The Rock",
+            entity_id="cragheart",
             health=Health(max=18, current=18),
             conditions=[],
             exhausted=False,
@@ -23,7 +23,7 @@ GAME_STATE = GameState(
             loot=0,
         ),
         Character(
-            entity_id="Skittle",
+            entity_id="mindthief",
             health=Health(max=9, current=4),
             conditions=[
                 Condition(name="wound"),
@@ -35,7 +35,7 @@ GAME_STATE = GameState(
             loot=17,
         ),
         Character(
-            entity_id="Casca Barrus",
+            entity_id="lightning",
             health=Health(max=18, current=-1),
             conditions=[],
             exhausted=True,
@@ -43,7 +43,7 @@ GAME_STATE = GameState(
             loot=0,
         ),
         Character(
-            entity_id="Noctis",
+            entity_id="eclipse",
             health=Health(max=12, current=12),
             conditions=[],
             exhausted=True,
