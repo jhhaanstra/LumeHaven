@@ -1,283 +1,117 @@
-# Setup Guide
+# Quick Start
 
-Complete instructions for setting up LumeHaven with Gloomhaven Secretariat (GHS).
+## Setup Guide
 
-## Architecture Overview
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Your Browser                               │
-│  ┌─────────────────┐    ┌─────────────────┐                      │
-│  │  Gloomhaven      │───▶│  GHS Web UI      │                      │
-│  │  (in browser)    │    │  (localhost:12345)│                      │
-│  └─────────────────┘    └─────────────────┘                      │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     GHS Server Docker Container                    │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  GHS Server (gloomhavensecretariat/ghs-server:latest)      │    │
-│  │  - Stores game state in ghs/ghs.sqlite                      │    │
-│  │  - Serves web UI on port 8080 (mapped tolocalhost:12345) │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   LumeHaven Server Docker Container               │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  LumeHaven Server                                            │    │
-│  │  - Reads game state from ghs/ghs.sqlite                     │    │
-│  │  - Triggers lighting effects based on game events           │    │
-│  │  - API on port 5000 (mapped to localhost:5000)              │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                       Your smart lamps                            │
-│  (Yeelight, Philips Hue, etc. - configured via plugins)          │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## Method 1: Docker Compose (Recommended)
-
-The easiest way to run LumeHaven is using Docker Compose, which handles both the GHS Server and LumeHaven services.
-
-### Step 1: Create docker-compose.yml
-
-The repository includes a `docker-compose.yml` file:
-
-```yaml
-version: '3.8'
-
-services:
-  ghs-server:
-    image: gloomhavensecretariat/ghs-server
-    ports:
-      - "12345:8080"
-    volumes:
-      - ./ghs:/root/.ghs
-  lumehaven:
-    image: jhhaanstra/lumehaven
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./config.yml:/lumehaven/config.yml
-      - ./ghs:/lumehaven/ghs
-```
-
-### Step 2: Start the Services
-
-```bash
-# From the project root directory
-docker compose up -d
-```
-
-This will:
-1. Pull the GHS Server image
-2. Pull the LumeHaven image
-3. Create a `ghs/` directory for GHS data
-4. Start both services in detached mode
-
-### Step 3: Verify Services
-
-```bash
-# Check running containers
-docker compose ps
-
-# View logs for GHS Server
-docker compose logs ghs-server
-
-# View logs for LumeHaven
-docker compose logs lumehaven
-```
-
-## Method 2: Running Without Docker
-
-For development or advanced use cases, you can run LumeHaven directly.
+This project uses Docker Compose to run both a **Gloomhaven Secretariat (GHS) server** and a **LumeHaven** instance.
 
 ### Prerequisites
 
-- Python 3.14+
-- pip/uv for dependency management
+- Docker and Docker Compose installed
+- A Gloomhaven Secretariat (GHS) compatible browser
 
-### Step 1: Install Dependencies
+### Configuring the GHS Server
+To generate a valid LumeHaven configuration, you first need to set up and configure the GHS server:
+1. From the project root directory, start the ghs server `docker compose up -d ghs-server`, and open in the browser `localhost:12345`.
+   - the ghs directory contains an `application.properties` that automatically downloads the latest client. 
 
-```bash
-# Using uv (recommended)
-uv sync
+**2. Save Progress to the Server**
 
-# Or using pip
-pip install -e .
-```
+By default, GHS saves progress in your browser’s local storage. To save to the server instead:
+1. Open the top-left menu and select "Connect to Server".
+2. Enter the following details:
+   - Host: localhost
+   - Port: 12345
+   - Game Code: Click "Generate Code" and save the generated UUID (e.g., `74986287-7208-4719-aba3-5fe464f7f713`).
+3. Click "Connect". You should now see the server version displayed.
 
-### Step 2: Install GHS Server
+*Tip: Use a private browser window if you encounter connection issues after your first session.*
 
-You'll need to run GHS Server separately:
+**3. Set Up Your Campaign**
 
-```bash
-# Using Docker (recommended)
-docker run -d -p 12345:8080 -v $(pwd)/ghs:/root/.ghs gloomhavensecretariat/ghs-server
+Proceed to create a new campaign or import your existing data as usual.
 
-# Or install natively (see GHS documentation)
-```
+**4. Verify the Database**
 
-### Step 3: Configure GHS
+If you used the provided docker-compose file and started the GHS server from the project root, a `ghs.sqlite` file will be created in the ghs directory.
 
-1. Open `http://localhost:12345` in your browser
-2. Connect to the server:
-   - Host: `localhost`
-   - Port: `12345`
-   - Generate a game code and save the UUID
-3. Create or import your campaign
+## 5. Verify services
 
-### Step 4: Configure LumeHaven
+- Check server status: `curl http://localhost:5000/status`
+- List scenes: `curl http://localhost:5000/scenes`
 
-Copy and edit the config:
+## 6. Start game loop
+In case Lumehaven is not configured to start the game loop on boot (which is disabled by default), you can start the game loop manually with the following command: `curl -X POST http://localhost:5000/start`
 
-```bash
-cp config.yaml.example config.yml
-# Edit config.yml with your game_code
-```
+## 7. Stopping game loop
+You can stop the game loop with the following command: `curl -X POST http://localhost:5000/stop`
 
-### Step 5: Run LumeHaven
 
-```bash
-# Development mode
-python -m lumehaven
+### Creating a LumeHaven Configuration
+Once the GHS server is set up, create a LumeHaven configuration:
 
-# Or use the entry point
-lumehaven
-```
+**1. Configure config.yaml**
 
-The server will start on `http://localhost:5000`
+Copy `config.yaml.example` to `config.yaml` and edit it:
+- Set game_code to the UUID generated during GHS setup (found in the top-left menu under "Server Connection").
+- If LumeHaven is started from the project root, leave the other GHS settings as-is.
 
-## Configuring GHS Server
+**2. Add Your Lamps**
 
-### Automatic Configuration
+Refer to the wiki (WIP) for detailed instructions on adding lamps.
 
-The provided `ghs/application.properties` file (if present) can automatically configure GHS to download the latest client data.
+**3. Customize Effects**
 
-### Manual Setup
+All effects are pre-configured. You can modify color values or remove unwanted effects.
 
-1. **First Run**: Access `http://localhost:12345` and the client will be downloaded automatically
-2. **Server Connection**: 
-   - Click the hamburger menu (top-left)
-   - Select "Connect to Server"
-   - Enter connection details
-   - Click "Generate Code" to create a game code
-   - Save this UUID for LumeHaven configuration
+**4. Configure Scenes**
 
-3. **Verify Database**: After connecting, a `ghs.sqlite` file will be created in the `ghs/` directory
+Example scenes are provided. You can override them or add new ones as needed.
 
-### GHS Directory Structure
+### Starting LumeHaven
+With the configuration complete, start the LumeHaven server from the project root directory using `docker compose up -d lumehaven`.
 
-```
-ghs/
-├── application.properties    # GHS configuration
-├── ghs.sqlite               # Game database (created automatically)
-└── ...                      # Other GHS files
-```
+Now start playing Gloomhaven in your browser, and watch your lights react to in-game events!
 
-## Configuring LumeHaven
+## Troubleshooting / FAQ
 
-See [Configuration Reference](configuration.md) for detailed configuration options.
+**Q: Can I use LumeHaven without Docker?**
+A: Yes, install dependencies manually and run `python -m lumehaven`.
 
-### Quick Configuration
+**Q: Can I use LumeHaven with a GHS server on a different machine?**
+A: Not currently. LumeHaven reads the SQLite database directly, so GHS and LumeHaven must share the same filesystem or volume.
 
-1. Set `game_code` in `config.yml` to match your GHS game code
-2. Add your lamps under the `lamps` section
-3. Customize effects and scenes as desired
+**Q: Can I add more lamp types?**
+A: Yes! Create a new integration following the [Integrations Guide](integrations.md).
 
-## Starting/Stopping Services
+**Q: Can I use LumeHaven with non-Yeelight lamps?**
+A: Yes! Use the plugin system to add support for any smart lighting system.
 
-### Docker Compose Commands
+**Q: Can I have different scenes for different scenarios?**
+A: Not automatically currently. You can manually change scenes via the API, or create scripts to automate this.
 
-```bash
-# Start all services
-docker compose up -d
+**Q: Why do effects trigger multiple times for the same event?**
+A: The polling interval (`interval_ms`) may be catching the game state multiple times during a transition. Try increasing the interval.
 
-# Start specific service
-docker compose up -d ghs-server
-docker compose up -d lumehaven
+**Q: Can I run multiple LumeHaven instances?**
+A: Yes, use different config files and port mappings. Each instance controls its own set of lamps.
 
-# Stop all services
-docker compose down
+**Q: How do I reset LumeHaven?**
+A: Stop all containers (`docker compose down`), delete `ghs/ghs.sqlite` if needed, and restart GHS to generate a new game code.
 
-# Stop specific service
-docker compose stop lumehaven
+**Q: Where are logs stored?**
+A: In the container at `/lumehaven/app.log`, or mounted to your host if configured.
 
-# View logs
-docker compose logs -f
+**Q: Can I change the API port?**
+A: Yes, modify the port mapping in `docker-compose.yml`. LumeHaven itself uses port 5000 internally.
 
-# Rebuild images (if you made code changes)
-docker compose build
-```
+## Version Compatibility
 
-### API Commands
-
-Once running, you can control LumeHaven via its API:
-
-```bash
-# Check status
-curl http://localhost:5000/status
-
-# Start game monitoring
-curl -X POST http://localhost:5000/start
-
-# Stop game monitoring
-curl -X POST http://localhost:5000/stop
-```
-
-## Network Configuration
-
-### Ports
-
-| Service | Internal Port | External Port | Purpose |
-|---------|---------------|---------------|---------|
-| GHS Server | 8080 | 12345 | Web UI and API |
-| LumeHaven | 5000 | 5000 | REST API |
-
-### Changing Ports
-
-To change ports, edit `docker-compose.yml`:
-
-```yaml
-services:
-  ghs-server:
-    ports:
-      - "NEW_PORT:8080"  # Change to your desired port
-  lumehaven:
-    ports:
-      - "NEW_PORT:5000"  # Change to your desired port
-```
-
-Then update your configuration accordingly.
-
-## Data Persistence
-
-Both services persist data to your host machine:
-
-- **GHS Data**: Stored in `./ghs/` (mounted from container)
-- **LumeHaven Config**: Stored in `./config.yml` (mounted from container)
-
-This ensures your data persists even when containers are stopped or restarted.
-
-## Security Considerations
-
-1. **Local Network Only**: By default, services are accessible only from your local machine
-2. **No Authentication**: The LumeHaven API does not currently support authentication
-3. **Game Code**: Your game code acts as a simple access control mechanism
-
-For production use, consider:
-- Adding a reverse proxy with authentication
-- Restricting access to trusted IP addresses
-- Using Docker's network isolation features
+| LumeHaven Version | Python Version | GHS Server | Notes |
+|-------------------|----------------|-------------|-------|
+| Latest (main) | 3.14+ | Latest | Recommended |
+| 0.1.0 | 3.14+ | Any | Stable |
 
 ## Next Steps
 
-- [Configuration Reference](configuration.md) - Customize your setup
-- [integrations](integrations.md) - Add support for your smart lights
-- [API Reference](api-reference.md) - Automate and integrate with other tools
+- [Configuration Reference](configuration.md)
+- [Adding Lamp Integrations](integrations.md)

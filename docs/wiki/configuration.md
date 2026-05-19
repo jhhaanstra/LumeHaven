@@ -385,7 +385,6 @@ Common validation errors:
 
 ## See Also
 
-- [Quick Start](quick-start.md) - Get running quickly
-- [Setup Guide](setup-guide.md) - Detailed setup instructions
+- [Setup Guide](setup-guide.md) - Get LumeHaven running
 - [Integrations](integrations.md) - Create custom lamp integrations
 - [API Reference](api-reference.md) - Control LumeHaven programmatically
