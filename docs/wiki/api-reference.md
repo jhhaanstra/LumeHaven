@@ -377,7 +377,7 @@ curl http://localhost:5000/status
 
 ## See Also
 
-- [Quick Start](quick-start.md) - Get LumeHaven running
+- [Setup Guide](setup-guide.md) - Get LumeHaven running
 - [Configuration](configuration.md) - Configure scenes, lamps, and effects
 - [Integrations](integrations.md) - Create custom lamp integrations
 - [Events & Effects](events-and-effects.md) - Available game events

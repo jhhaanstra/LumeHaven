@@ -3,7 +3,7 @@
 Welcome to the LumeHaven Wiki! This documentation covers everything you need to know about setting up, configuring, and extending LumeHaven.
 
 ## Table of Contents
-- **[Setup Guide](setup-guide.md) - Get LumeHaven running with Docker
+- **[Setup Guide](setup-guide.md)** - Get LumeHaven running with Docker
 - **[Configuration](configuration.md)** - Understanding and customizing config.yml
 - **[Integrations](integrations.md)** - How lamp integrations work and how to create your own
 - **[API Reference](api-reference.md)** - Complete endpoint documentation for the LumeHaven server
