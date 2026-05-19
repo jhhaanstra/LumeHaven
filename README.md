@@ -12,4 +12,4 @@ LumeHaven connects with [Gloomhaven Secretariat (GHS)](https://github.com/Lurkar
 
 ---
 
-The best place to start is the [Docs](docs/wiki/scenesREADME.md). Setting up Lumehaven is explained in the [setup guide](docs/wiki/setup-guide.md).
+The best place to start is the [Docs](docs/wiki/README.md). Setting up Lumehaven is explained in the [setup guide](docs/wiki/setup-guide.md).
