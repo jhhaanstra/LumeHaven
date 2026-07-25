@@ -11,7 +11,7 @@ This project uses Docker Compose to run both a **Gloomhaven Secretariat (GHS) se
 
 ### Configuring the GHS Server
 To generate a valid LumeHaven configuration, you first need to set up and configure the GHS server:
-1. From the project root directory, start the ghs server `docker compose up -d ghs-server`, and open in the browser `localhost:12345`.
+1. From the project root directory, start the ghs server `docker compose up -d ghs-server`, and open in the browser `localhost:8080`.
    - the ghs directory contains an `application.properties` that automatically downloads the latest client. 
 
 **2. Save Progress to the Server**
@@ -20,11 +20,11 @@ By default, GHS saves progress in your browser’s local storage. To save to the
 1. Open the top-left menu and select "Connect to Server".
 2. Enter the following details:
    - Host: localhost
-   - Port: 12345
+   - Port: 8080
    - Game Code: Click "Generate Code" and save the generated UUID (e.g., `74986287-7208-4719-aba3-5fe464f7f713`).
 3. Click "Connect". You should now see the server version displayed.
 
-*Tip: Use a private browser window if you encounter connection issues after your first session.*
+*Tip: Gloomhaven Secretariat uses browser storate by default. Use a private browser window if you encounter connection issues after your first session.*
 
 **3. Set Up Your Campaign**
 
@@ -33,18 +33,6 @@ Proceed to create a new campaign or import your existing data as usual.
 **4. Verify the Database**
 
 If you used the provided docker-compose file and started the GHS server from the project root, a `ghs.sqlite` file will be created in the ghs directory.
-
-## 5. Verify services
-
-- Check server status: `curl http://localhost:5000/status`
-- List scenes: `curl http://localhost:5000/scenes`
-
-## 6. Start game loop
-In case Lumehaven is not configured to start the game loop on boot (which is disabled by default), you can start the game loop manually with the following command: `curl -X POST http://localhost:5000/start`
-
-## 7. Stopping game loop
-You can stop the game loop with the following command: `curl -X POST http://localhost:5000/stop`
-
 
 ### Creating a LumeHaven Configuration
 Once the GHS server is set up, create a LumeHaven configuration:
@@ -70,7 +58,17 @@ Example scenes are provided. You can override them or add new ones as needed.
 ### Starting LumeHaven
 With the configuration complete, start the LumeHaven server from the project root directory using `docker compose up -d lumehaven`.
 
-Now start playing Gloomhaven in your browser, and watch your lights react to in-game events!
+### Verify services
+
+- Check server status: `curl http://localhost:5000/status`
+- List scenes: `curl http://localhost:5000/scenes`
+
+### Start game loop
+In case Lumehaven is not configured to start the game loop on boot (which is disabled by default), you can start the game loop manually with the following command: `curl -X POST http://localhost:5000/start`
+
+### Stopping game loop
+You can stop the game loop with the following command: `curl -X POST http://localhost:5000/stop`
+
 
 ## Troubleshooting / FAQ
 
