@@ -20,8 +20,8 @@ class YeeLightLamp(Lamp):
     """
 
     def __init__(self, entity_id: str, ip: str):
+        super().__init__(entity_id)
         self.bulb = Bulb(ip)
-        self.entity_id = entity_id
         self.ip = ip
 
     def turn_color(self, rgb: RGB):

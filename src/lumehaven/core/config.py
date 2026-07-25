@@ -4,8 +4,6 @@ from typing import Any, Dict, List, Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
-from lumehaven.lights.lamps import Lamp
-
 EffectType = Literal["add_to_cycle", "pulse"]
 
 

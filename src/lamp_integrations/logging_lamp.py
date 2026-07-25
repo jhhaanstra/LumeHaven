@@ -8,7 +8,7 @@ def create_logging_lamp(config: LampConfig) -> Optional[Lamp]:
     if config.type != "logging_lamp":
         return None
 
-    return LoggingLamp()
+    return LoggingLamp(config.id)
 
 
 class LoggingLamp(Lamp):

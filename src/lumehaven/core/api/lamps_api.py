@@ -24,13 +24,19 @@ def create_lamps_api(config: Config):
     @lamps_api.route("/lamps/<entity_id>/color", methods=["POST"])
     def set_lamp_color(entity_id: str):
         rgb = RGB.model_validate(request.json)
-        lamps.get_lamp(entity_id).turn_color(rgb)
-        return "ok", 200
+        for lamp in lamps:
+            if lamp.entity_id == entity_id:
+                lamp.turn_color(rgb)
+                return "ok", 200
+        return "lamp not found", 404
 
     @lamps_api.route("/lamps/<entity_id>/brightness", methods=["POST"])
     def set_brightness(entity_id: str):
         brightness = int(request.data)
-        lamps.get_lamp(entity_id).set_brightness(brightness)
-        return "ok", 200
+        for lamp in lamps:
+            if lamp.entity_id == entity_id:
+                lamp.set_brightness(brightness)
+                return "ok", 200
+        return "lamp not found", 404
 
     return lamps_api
