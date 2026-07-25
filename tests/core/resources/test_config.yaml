@@ -13,22 +13,21 @@ lamps:
   - type: "yeelight"
     id: "lamp-2"
     ip: "4.3.2.1"
-    foo: "bar"
 
 effects:
   - event: "fire_element_active"
     effect: "pulse"
-    rgb: [255, 0, 0]
+    rgb: [ 255, 0, 0 ]
   - event: "ice_element_active"
     effect: "pulse"
-    rgb: [1, 40, 255]
+    rgb: [ 1, 40, 255 ]
 
 scenes:
   - name: "tavern"
     colors:
-      - [1, 2, 3]
-      - [3, 2, 1]
+      - [ 1, 2, 3 ]
+      - [ 3, 2, 1 ]
   - name: "cave"
     colors:
-      - [100, 123, 321]
-      - [234, 123, 10]
+      - [ 100, 123, 321 ]
+      - [ 234, 123, 10 ]

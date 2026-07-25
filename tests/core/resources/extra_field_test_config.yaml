@@ -11,8 +11,13 @@ home_assistant:
 main_scene: "tavern"
 
 lamps:
-  - type: "invalid"
+  - type: "yeelight"
     id: "lamp-1"
+    ip: "1.2.3.4"
+  - type: "yeelight"
+    id: "lamp-2"
+    ip: "4.3.2.1"
+    foo: "bar"
 
 effects:
   - event: "fire_element_active"
@@ -24,3 +29,5 @@ scenes:
     colors:
       - [ 1, 2, 3 ]
       - [ 3, 2, 1 ]
+
+

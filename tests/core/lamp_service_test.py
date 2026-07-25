@@ -7,7 +7,7 @@ from lumehaven.core.events import SceneEvent
 from lumehaven.core.game_service import PulseEvent
 from lumehaven.core.lamp_service import LampLoader, LampService
 from lumehaven.lights.lamps import RGB
-from tests.core.utils import TestLamp
+from tests.core.utils import StaticLamp
 
 
 class LampLoaderTest(unittest.TestCase):
@@ -32,8 +32,8 @@ class LampLoaderTest(unittest.TestCase):
 
 class LampServiceTest(unittest.TestCase):
     def test_given_event_when_pulse_then_pulse_all_lamps(self):
-        lamp1 = TestLamp()
-        lamp2 = TestLamp()
+        lamp1 = StaticLamp()
+        lamp2 = StaticLamp()
 
         lamp_service = LampService([lamp1, lamp2], [RGB(r=1, g=2, b=3)])
 
@@ -42,8 +42,8 @@ class LampServiceTest(unittest.TestCase):
         self.assertEqual(lamp2.pulses, [RGB(r=100, g=50, b=100)])
 
     def test_configure_main_scene_to_lamps(self):
-        lamp1 = TestLamp()
-        lamp2 = TestLamp()
+        lamp1 = StaticLamp()
+        lamp2 = StaticLamp()
 
         main_scene = [RGB(r=100, g=50, b=100), RGB(r=50, g=100, b=50)]
         LampService([lamp1, lamp2], main_scene)
@@ -52,8 +52,8 @@ class LampServiceTest(unittest.TestCase):
         self.assertEqual(lamp2.current_cycle, main_scene)
 
     def test_update_scene_on_scene_event(self):
-        lamp1 = TestLamp()
-        lamp2 = TestLamp()
+        lamp1 = StaticLamp()
+        lamp2 = StaticLamp()
 
         lamp_service = LampService([lamp1, lamp2], [])
         cycle = [RGB(r=100, g=50, b=100)]

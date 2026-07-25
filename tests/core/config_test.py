@@ -33,8 +33,12 @@ class TestConfig(unittest.TestCase):
         )
 
     def test_lamp_config_extra_fields(self):
-        self.assertFalse("foo" in self.config.lamp_configs[0].dict())
-        config_dict: dict[str, Any] = self.config.lamp_configs[1].dict()
+        test_config_path = (
+            Path(__file__).parent / "resources" / "extra_field_test_config.yaml"
+        )
+        config = Config.from_file(str(test_config_path))
+        self.assertFalse("foo" in config.lamp_configs[0].dict())
+        config_dict: dict[str, Any] = config.lamp_configs[1].dict()
         self.assertTrue("foo" in config_dict)
         self.assertEqual(config_dict["foo"], "bar")
 

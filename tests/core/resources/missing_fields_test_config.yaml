@@ -7,6 +7,19 @@ home_assistant:
   url: "http://localhost:8123"
   token: "auth_token"
 
+main_scene: "tavern"
+
 lamps:
   - type: "yeelight"
     id: "lamp-1"
+
+effects:
+  - event: "fire_element_active"
+    effect: "pulse"
+    rgb: [ 255, 0, 0 ]
+
+scenes:
+  - name: "tavern"
+    colors:
+      - [ 1, 2, 3 ]
+      - [ 3, 2, 1 ]
