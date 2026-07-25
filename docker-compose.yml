@@ -4,7 +4,7 @@ services:
   ghs-server:
     image: gloomhavensecretariat/ghs-server
     ports:
-      - "12345:8080"
+      - "8080:8080"
     volumes:
       - ./ghs:/root/.ghs
   lumehaven:
