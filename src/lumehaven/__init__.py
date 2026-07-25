@@ -16,4 +16,4 @@ def main() -> None:
 
     config = Config.from_file("config.yml")
     app = create_app(config)
-    app.run()
+    app.run(host="0.0.0.0")
