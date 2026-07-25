@@ -2,8 +2,6 @@ import logging
 from importlib.metadata import entry_points
 from typing import Any
 
-from pygments.plugin import iter_entry_points
-
 from lumehaven.core.config import Config, LampConfig
 from lumehaven.core.events import Event, SceneEvent
 from lumehaven.core.game_service import EventSubScriber
@@ -14,7 +12,7 @@ class LampLoader:
     def __init__(self):
         self.factories: dict[str, Any] = dict()
 
-        for ep in iter_entry_points("lumehaven.lamp_providers"):
+        for ep in entry_points(group="lumehaven.lamp_providers"):
             logging.info(f"Found integration type: {ep.name}")
             self.factories[ep.name] = ep.load()
 
